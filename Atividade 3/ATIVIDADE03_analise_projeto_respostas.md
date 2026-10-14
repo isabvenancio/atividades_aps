@@ -259,7 +259,20 @@ Analise se o Caso de Uso respeita as regras, identifique o que falta e
 produza uma versão corrigida.
 
 R: 
+Não valida o aluno (RN01 e RN02) = Não verifica se o aluno tem empréstimos em atraso ou se já atingiu o limite de 5 livros.
+Não valida o livro (RN03) = Não confirma se o exemplar está disponível para empréstimo.
+Não define prazos (RN04) = Não calcula nem registra a data limite de devolução de 14 dias.
+Omitiu tratamento de erro = Não possui fluxos de exceção para tratar bloqueios ou indisponibilidades.
 
+1. Bibliotecário informa a identificação do aluno.
+2. Sistema localiza o aluno e valida que ele não possui débitos/atrasos [RN01] e possui menos de 5 livros emprestados [RN02].
+3. Bibliotecário informa o código do livro.
+4. Sistema localiza o livro e confirma que está disponível [RN03].
+5. Sistema calcula a data de devolução para 14 dias a partir da data atual [RN04] e registra o empréstimo.
+6. Sistema exibe a confirmação e o comprovante com a data de devolução.
+
+FE01 — Aluno Impedido: Se o aluno possuir empréstimo vencido [RN01] ou 5 livros emprestados [RN02], o sistema exibe mensagem de bloqueio e cancela a operação.
+FE02 — Livro Indisponível: Se o livro estiver emprestado ou reservado [RN03], o sistema exibe alerta e permite informar outro livro ou encerrar.
 
 ------------------------------------------------------------------------
 
@@ -283,7 +296,9 @@ UC — Realizar Compra
 Identifique:
 
 -   3 fluxos alternativos;
--   3 fluxos de exceção.
+R: aplicação de cupom de desconto (passo 3), seleção do pagamento via pix/boleto/cartão (passo 4), cliente seleciona um novo endereço cadastrado (passo 2).
+-   3 fluxos de exceção;
+R: pagamento recusado (passo 5), cep fora da área de entrega (passo 2), produto sem estoque informado na hora de calcular o valor total(passo 3).
 
 Para cada um, indique em qual passo ele ocorre.
 
@@ -294,15 +309,23 @@ Para cada um, indique em qual passo ele ocorre.
 Classifique e justifique:
 
 a)  Cliente escolhe PIX em vez de cartão.\
+R: fluxo alternativo = trata-se de outra opção válida de pagamento
 b)  Cartão é recusado.\
+R: fluxo exceção = condição de erro no processamento financeiro que interrompe o happy path, impedindo a finalização direta da compra
 c)  Cliente adiciona outro produto.\
+R: fluxo alternativo = variação da etapa de montagem do pedido, o usuário alterou o caminho do fluxo para ajustar a compra antes de concluir
 d)  Produto fica sem estoque antes da confirmação.\
+R: fluxo exceção = impedimento no momento da consolidação que interrompe a conclusão normal da compra
 e)  Cliente informa cupom de desconto.\
+R: fluxo alternativo = cliente pode optar para aplicar um benefício financeiro e, em seguida, concluir a compra novamente
 f)  Cupom está vencido.
+R: fluxo exceção = é uma falha de validação da regra de negócio do cupom, impedindo a finalização da compra por essa forma de pagamento
 
 Depois discuta:
 
 > Todas essas situações precisam estar documentadas no mesmo Caso de Uso?
+
+R: Sim, em geral. O Caso de Uso (Realizar Compra) deve conter o fluxo principal (happy path) e listar todos os seus Fluxos Alternativos (ex.: uso de cupom, pagamento por PIX) e Fluxos de Exceção (ex.: cupom vencido, cartão recusado, falta de estoque).
 
 ------------------------------------------------------------------------
 
@@ -334,7 +357,32 @@ Registre:
   Problema   Por que é um problema?   Correção proposta
   ---------- ------------------------ -------------------
                                       
-                                      
+R:
+Caso de Uso escolhido: UC-05 — Gerar sugestão personalizada.
+
+| Item | Avaliação |
+|---|---|
+| Identificador | ✓ UC-05 |
+| Nome orientado a objetivo | ✓ Gerar sugestão personalizada |
+| Ator principal | ✓ Usuário |
+| Atores secundários | ⚠ Não identificados |
+| Objetivo | ✓ Definido |
+| Gatilho | ⚠ Precisa ser explícito |
+| Pré-condições | ✓ Definidas |
+| Pós-condições | ⚠ Podem ser detalhadas |
+| Fluxo principal | ✓ Definido |
+| Fluxos alternativos | ✓ Definidos |
+| Exceções | ⚠ Faltam alguns cenários |
+| Regras relacionadas | ⚠ Falta relacionar a RN-08 |
+| Requisitos relacionados | ✓ Identificados |
+| Resultado esperado | ⚠ Precisa ser mais explícito |
+
+| Problema | Por que é um problema? | Correção proposta |
+|---|---|---|
+| Gatilho pouco explícito | Deixa o início ambíguo. | Informar que o usuário solicita uma sugestão. |
+| Dados obrigatórios indefinidos | Pode gerar dúvidas na validação. | Definir os campos obrigatórios. |
+| Falhas pouco detalhadas | Pode deixar a operação inconsistente. | Especificar o tratamento de cada falha. |
+| Privacidade pouco relacionada | Pode comprometer a proteção dos dados. | Relacionar a RN-08 ao caso de uso. | 
 
 ------------------------------------------------------------------------
 
@@ -352,6 +400,28 @@ O QUE ACONTECE DEPOIS?
 ```
 
 Identifique quais perguntas revelaram informações ausentes.
+R: 
+
+| Passo do fluxo | Informação ausente identificada |
+|---|---|
+| 1. Solicitar sugestão | Condições exatas para iniciar a operação. |
+| 2. Verificar informações | Lista completa dos campos obrigatórios. |
+| 3. Identificar contexto | Tratamento de falhas ao recuperar dados. |
+| 4. Identificar destinatário | Origem e validação dos dados. |
+| 5. Identificar categorias | Critérios de compatibilidade. |
+| 6. Selecionar desculpa | O que ocorre se não houver desculpas disponíveis. |
+| 7. Gerar sugestão | Tratamento de demora ou falha. |
+| 8. Associar ao pedido | Tratamento de falha na associação. |
+| 9. Registrar histórico | O que fazer se o registro falhar. |
+| 10. Apresentar sugestão | Tratamento de falha na apresentação. |
+
+Quais perguntas revelaram informações ausentes?
+
+- QUEM? — Esclarecer quem executa cada ação.
+- O QUÊ? / SOBRE O QUÊ? — Definir dados obrigatórios e critérios.
+- E SE NÃO DER CERTO? — Identificar falhas sem tratamento.
+- QUAL REGRA SE APLICA? — Relacionar as regras de negócio.
+- O QUE ACONTECE DEPOIS? — Esclarecer a sequência após cada etapa.
 
 ------------------------------------------------------------------------
 
@@ -380,6 +450,19 @@ Critério de Aceitação
  ↓
 Cenário de Teste
 ```
+RN07: Descontos superiores a 15% devem ser autorizados pelo gerente.
+ ↓
+RF01: o sistema deve solicitar e validar a autorização de um perfil de gerente sempre que o desconto aplicado for superior a 15%
+ ↓
+UC01: realizar venda (FA01: aplicação de desconto superior a 15%)
+1. Atendente solicita desconto de 20% no valor total.
+2. Sistema identifica que o desconto excede 15% e solicita aprovação do Gerente [RN07].
+3. Gerente informa suas credenciais de autorização.
+4. Sistema valida as credenciais, aplica o desconto e retorna ao fluxo principal.
+ ↓
+CA01 (Critério de Aceitação): Dado que o desconto seja maior que 15%, quando o atendente tentar aplicar, o sistema deve bloquear a confirmação até a inserção de credenciais válidas de gerente.
+ ↓
+CT01: pedido de R$ 100,00 com desconto de R$ 20,00 (20%); Tenta confirmar a venda sem credenciais de gerente -> resultado esperado é que exiba mensagem de erro da RN07 e impeça até a liberação do gerente
 
 Todos os elementos devem permanecer coerentes com a RN07.
 
@@ -394,12 +477,29 @@ Utilizando o projeto da equipe:
   RN01    RF??        UC??          ???
   RN02    RF??        UC??          ???
 
+R: 
+| Regra | Requisito | Caso de Uso | Fluxo/Cenário |
+|---|---|---|---|
+| RN-01 | RF-03 | UC-03 | Criar pedido |
+| RN-02 | RF-04, RF-06 | UC-04, UC-05 | Informar situação e validar pedido |
+| RN-03 | RF-05, RF-06 | UC-05 | Validar dados obrigatórios |
+| RN-04 | RF-06 | UC-05 | Gerar sugestão personalizada |
+| RN-05 | RF-07 | UC-05 | Selecionar desculpa compatível |
+| RN-06 | RF-08 | UC-06 | Solicitar nova sugestão |
+| RN-07 | RF-10 | UC-07 | Registrar feedback |
+| RN-08 | RNF-01, RNF-02 | UC-02 a UC-07 | Proteger dados do usuário |
+| RN-09 | RF-09, RNF-03 | UC-05, UC-06 | Registrar sugestões no histórico |
+
 Depois responda:
 
 -   Existem regras sem requisitos?
+R: Não. Todas as regras possuem requisitos relacionados, considerando os requisitos funcionais e não funcionais.
 -   Existem requisitos sem Casos de Uso?
+R: Sim. O RF-11, que trata da associação de desculpas a categorias, não possui um caso de uso específico claramente identificado.
 -   Existem comportamentos sem relação aparente com requisito ou regra?
+R: Sim. A privacidade no UC-05 e algumas associações incorretas entre regras e casos de uso precisam ser revisadas.
 -   Isso necessariamente representa um erro?
+R: Não. Pode ser uma falha de documentação ou um comportamento interno. Porém, funcionalidades importantes precisam estar relacionadas aos requisitos e às regras correspondentes.
 
 ------------------------------------------------------------------------
 
