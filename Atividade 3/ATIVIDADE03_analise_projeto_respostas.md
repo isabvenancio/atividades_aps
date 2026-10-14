@@ -31,11 +31,16 @@ Software**.
 Classifique e justifique:
 
 a)  Todo empréstimo deve possuir prazo máximo de 30 dias.\
+R: Regra de negócio: é uma política/norma do domínio que limita a duração de um serviço, existindo mesmo sem um software
 b)  O sistema deve permitir registrar um empréstimo.\
+R: Requisito funcional: descreve uma funcionalidade /serviço que o software deve oferecer
 c)  Usuários administradores devem utilizar autenticação em dois
     fatores.\
+R: Requisito não funcional: define uma restrição de qualidade e segurança sobre a forma como o sistema realiza a autenticação
 d)  Clientes com pagamentos vencidos não podem realizar novas compras.\
+R: Regra de negócio: é uma diretriz financeira da empresa que restringe a operação para clientes não pagantes
 e)  O sistema deve responder às consultas em até 2 segundos.
+R: Requisito não funcional: define um critério de desempenho e tempo de resposta do software
 
 ------------------------------------------------------------------------
 
@@ -44,17 +49,17 @@ e)  O sistema deve responder às consultas em até 2 segundos.
 Considere um sistema de biblioteca. Classifique os requisitos e, quando
 forem não funcionais, indique sua categoria:
 
--   permitir empréstimo de livros;
--   permitir consulta ao catálogo;
--   suportar 500 usuários simultâneos;
--   exigir autenticação para operações administrativas;
--   funcionar nos principais navegadores atuais;
--   apresentar resultados de pesquisa em até 2 segundos.
+-   permitir empréstimo de livros; - Funcional
+-   permitir consulta ao catálogo; - Funcional
+-   suportar 500 usuários simultâneos; - Não funcional: escalabilidade/desempenho
+-   exigir autenticação para operações administrativas; Não funcional: segurança
+-   funcionar nos principais navegadores atuais; - Não funcional: portabilidade/compatibilidade
+-   apresentar resultados de pesquisa em até 2 segundos; - Não funcional: desempenho
 
 Depois discuta:
 
-> Por que requisitos não funcionais não devem ser tratados como
-> requisitos "menos importantes"?
+> Por que requisitos não funcionais não devem ser tratados como requisitos "menos importantes"?
+Porque impactando diretamente o sistema e arquitetura, o RNF atua como uma restrição que atravessa diversas funcionalidade e molda toda a arquitetura, além da inviabilidade do produto, em que se for excessivamente lente, instável ou vulnerável torna inútil.
 
 ------------------------------------------------------------------------
 
@@ -62,12 +67,15 @@ Depois discuta:
 
 Um desenvolvedor afirma:
 
-> "Se já temos os requisitos funcionais, não precisamos de Casos de
-> Uso."
+> "Se já temos os requisitos funcionais, não precisamos de Casos de Uso."
 
 Explique por que essa afirmação é problemática.
 
+R: porque confunde declarar uma capacidade funciona do sistema com descrever o processo de interação necessário para realizar. O RF estabelece uma obrigação do software, mas nao explica a dinamica operacional (quem e o que).
+
 > O que o Caso de Uso acrescenta à descrição de um requisito funcional?
+
+R: acrescenta ator principal e objetivo, fluxo principal (happy path), pré e pós condições. fluxos alternativos e excessões, rastreabilidade e regras de negócio.
 
 ------------------------------------------------------------------------
 
@@ -76,17 +84,19 @@ Explique por que essa afirmação é problemática.
 Analise:
 
 ``` text
-Abrir Tela de Cliente
-Clicar em Salvar
-Cadastrar Cliente
-Digitar CPF
-Registrar Pedido
-Selecionar Produto
-Cancelar Pedido
+Abrir Tela de Cliente - Interface
+Clicar em Salvar - Interface
+Cadastrar Cliente - Caso de Uso
+Digitar CPF - Interface
+Registrar Pedido - Caso de Uso
+Selecionar Produto - Interface
+Cancelar Pedido - Caso de Uso
 ```
 
 Identifique quais são bons candidatos a **Casos de Uso** e quais parecem
 ações de interface ou passos internos. Justifique.
+
+R: Cssos de uso = Representam objetivos ou metas de negócio completos de um ator que entrega um resultado para o usuário ou empresa. Interface = são detalhes tecnológicos, eventos de botão etc que não possuem valor de negócio e devem aparecer apenas como passos do fluxo de eventos dentro de um caso de uso completo.
 
 ------------------------------------------------------------------------
 
@@ -98,9 +108,13 @@ funcionários e integração com um serviço externo de autenticação.
 Responda:
 
 a)  Quais podem ser atores?\
+R: estudantes, professores, coordenadores, funcionários e serviço externo de autenticação.
 b)  Um sistema externo pode ser ator?\
+R: Sim, plataformas que interagem e trocam dados com o software atuam como atores.
 c)  Uma pessoa pode representar mais de um ator?\
+R: Sim, o conceito de ator é representar um papel desempenhado no sistema, então pode ter papéis distintos (professor que também é estudante (<< exclude >>)).
 d)  "Banco de Dados" deveria normalmente aparecer como ator? Por quê?
+R: Não, o bd é um comportamento interno de infra do software, atores são entidades externas fora do sistema.
 
 ------------------------------------------------------------------------
 
@@ -131,6 +145,27 @@ RNF01, RNF02...
 UC01, UC02...
 ```
 
+R: 
+Atores = cliente e atendente;
+
+RN01 = o valor da cobranca é determinado com base na diferença no período de permanencia (horário de entrada e saida);
+RN02 = clientes conveniados recebem 20% de desconto sobre o valor total;
+RN03 = a saída só é permitida quando é confirmada o pagamento;
+
+RF01 = o sistema deve permitir registrar a entrada do veículo, armazenando placa e o horário de entrada;
+RF02 = o sistema deve permitir registrar a saída do veículo e autorizar a liberação;
+RF03 = o sistema deve permitir registrar o pagamento do período de permanencia;
+RF04 = o sistema deve permitir calcular o valor com base no tempo e na aplicação do desconto do convenio;
+RF05 = o sistema deve manter e permitir consultar o histórico das operações (entradas, saídas e pagamentos);
+
+RNF01 = desempenho, o cálculo da tarifa e confirmação do pagamento devem responder em até 2 segundos para evitar filas
+RNF02 = segurança, o histórico de operações deve ser armazenado de forma persistente e auditável, garantindo a integridade dos dados financeiros
+RNF03 = usabilidade, a interface do atendente deve ser otimizada para navegação rápida via teclado no momento do registro
+
+UC01 = registrar entrada de veículo, mapeia a identificação da placa e a gravação do horário de entrada
+UC02 = processar saída e pagamento, abrange a identificação do veículo/comprovante, cálculo do valor (com desconto se for conveniado), registro da forma de pagamento e liberação.
+UC03 = consultar histórico de operações, permite a busca e visualização das movimentações passadas e faturamento
+
 ------------------------------------------------------------------------
 
 ## Exercício 7 --- Sistema acadêmico
@@ -146,6 +181,18 @@ RN04 — Estudantes com frequência inferior a 75% são reprovados por frequênc
 
 Derive os **Requisitos Funcionais** necessários e indique quais **Casos
 de Uso** seriam afetados.
+
+R:
+RF01 = o sistema deve impedir o cadastro de notas menores que 0 ou maiores que 100.
+RF02 = o sistema deve permitir que notas sejam registradas e alteradas para os estudantes da turma.
+RF03 = o sistema deve verificar se o usuário é o professor responsável pela turma e se o período acadêmico está aberto antes de permitir a gravação/edição de notas.
+RF04 = o sistema deve permitir o registro das presenças e faltas dos estudantes.
+RF05 = o sistema deve calcular o percentual de frequência e determinar automaticamente a reprovação do estudante caso a frequência seja inferior a 75%.
+
+UC01 = lançar/alterar notas, RN01 e RN02 e RN03
+UC02 = registrar frequencia, RN04
+UC03 = fechar período/consolidar turma, RN03 e RN04
+UC04 = consultar histórico escolar, RN04
 
 ------------------------------------------------------------------------
 
@@ -167,6 +214,22 @@ Ator: Usuário
 ```
 
 Identifique pelo menos **seis problemas** e reescreva o Caso de Uso.
+
+R: 
+1. Nome genérico: "Cadastro" não especifica o objeto de negócio (ex.: Cliente).
+2. Ator vago: "Usuário" não define o papel exato (ex.: Atendente).
+3. Foco em interface (GUI): Passos como "abrir tela" e "clicar no botão" são detalhes de tela.
+4. Passos vagos do sistema: "Verifica" e "salva" não explicam o que é validado ou gravado.
+5. Passo redundante: "Finaliza" não gera valor de negócio.
+6. Falta de estrutura: Ovemetem-se objetivo, pré/pós-condições e fluxos de exceção.
+ 
+UC01 — Cadastrar Cliente
+
+1. Atendente solicita o cadastro e informa dados do cliente (Nome, CPF, E-mail).
+2. Sistema valida o formato dos dados [RN01] e confirma que o CPF não é duplicado [RN02].
+3. Sistema salva o registro e exibe mensagem de confirmação.
+
+Exceção (FE01 - Dados Inválidos / FE02 - CPF Duplicado): Sistema exibe alerta do erro e solicita correção.
 
 ------------------------------------------------------------------------
 
@@ -194,6 +257,9 @@ RN04 — O prazo normal do empréstimo é de 14 dias.
 
 Analise se o Caso de Uso respeita as regras, identifique o que falta e
 produza uma versão corrigida.
+
+R: 
+
 
 ------------------------------------------------------------------------
 
@@ -236,8 +302,7 @@ f)  Cupom está vencido.
 
 Depois discuta:
 
-> Todas essas situações precisam estar documentadas no mesmo Caso de
-> Uso?
+> Todas essas situações precisam estar documentadas no mesmo Caso de Uso?
 
 ------------------------------------------------------------------------
 
