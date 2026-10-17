@@ -1,0 +1,34 @@
+# VazaApp
+
+## Integrantes
+
+| Alunos | RA |
+|---|---|
+| Isabella Barela Venancio | RA144023 |
+| Carolina Yumi Toyota | RA143210 |
+| Matheus Lara Campos | RA126608 |
+| Gabriela Borborema Paes Barreto | RA144438 |
+
+## Professor
+
+Prof. Dr. João Choma
+
+## Disciplina
+
+Análise e Projeto de Software
+
+## Projeto
+
+**VazaApp**
+
+O VazaApp é uma aplicação voltada à geração de sugestões de desculpas personalizadas, considerando informações como contexto da situação, destinatário, tipo de relacionamento e nível de proximidade etc
+
+## Documentação
+
+A documentação do projeto está organizada nos seguintes arquivos:
+
+- [Regras de Negócio](regras-negocio.pdf)
+- [Requisitos Funcionais e Não Funcionais](requisitos.pdf)
+- [Documento Casos de Uso](casos_de_uso.pdf)
+- [Diagrama Casos de Uso](diagrama_casos_de_uso.svg)
+- Diagrama de Sequencia -> Pasta Diagramas Sequencias em .svg
