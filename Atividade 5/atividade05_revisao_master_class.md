@@ -13,14 +13,18 @@ Responda:
 
 **a)** Quais problemas podem surgir devido a essa forma de
 desenvolvimento?
+R: perda e centralização do conhecimento, ficando concentrado na memória individual de cada dev; baixa qualidade e alto índice de falha sem uma estratégia estruturada de testes e arquitetura; dificuldade de manutenção e granularidade; a falta de formalização faz com q cada dev entenda de uma forma oq deve ser feito desalinhando expectativas e provavel retrabalho.
 
 **b)** Explique o que é um **processo de desenvolvimento de software**.
+R: É a aplicação de uma abordagem sistemática, disciplinada e mensurável para o desenvolvimento, a operação e a manutenção do software. Ele estabelece o conjunto de atividades, etapas, papéis/responsabilidades, artefatos e critérios de qualidade que orientam a equipe sobre o que fazer, quando fazer e como fazer, transformando necessidades do cliente em um produto de software funcional, confiável e sustentável.
 
 **c)** Cite e explique pelo menos **quatro atividades** que poderiam
 fazer parte do processo adotado pela empresa.
+R: especificação de requisitos (elicitar, analisar, negociar, documentar e validar as necessidades do usuário durante o processo de construção), projeto e implementação (modelagem e arquitetura do sistema, onde coloca a mão na massa, estrutura dos dados, interfaces etc), validação (testes automatizados de qualidade para ver se cumpre os requisitos especificados) e evolução (com base nos testes, revisões e novas ncessidades, evolue o código para chegar ao ponto de entrega do software especificado)
 
 **d)** Explique como essas atividades poderiam reduzir os problemas
 apresentados no enunciado.
+R: reduz diretamente os problemas da empresa ao substituir o desenvolvimento informal por um fluxo de trabalho estruturado e devidamente registrado. A atividade de especificação elimina a dependência da memória verbal dos desenvolvedores ao registrar de forma clara e perene. O projeto estabelece uma arquitetura padronizada para o sistema, permitindo que qualquer membro da equipe compreenda a estrutura do software e faça manutenções sem depender do criador original do código. A implementação orientada a padrões evita o desenvolvimento desorganizado e favorece o compartilhamento contínuo de conhecimento entre o time. Por fim, a validação por meio de testes garante a detecção precoce de falhas e funciona como uma documentação viva do sistema, permitindo que novos desenvolvedores compreendam o comportamento esperado da aplicação e realizem alterações com segurança
 
 ------------------------------------------------------------------------
 
@@ -37,25 +41,33 @@ Classifique cada afirmação como:
 Justifique sua classificação.
 
 **a)** Clientes com habilitação vencida não podem alugar veículos.
+R: RN - é uma política e restrição do domínio sobre como a empresa opera, independe de um software
 
 **b)** O sistema deve permitir que o atendente registre uma locação.
+R: RF - descreve uma funcionalidade, serviço ou capacidade q o software deve oferecer para o usuário
 
 **c)** Uma locação deve possuir período mínimo de uma diária.
+R: RN - é uma condição/diretriz comercial q limita a operação do negócio, pertence as regras da locadora e existiria independemente do software adotado
 
 **d)** O sistema deve apresentar os veículos disponíveis em até 3
 segundos.
+R: RNF - desempenho, é uma restrição de qualidade ou atributo mensurável sobre tempo de responda da funcionalidade de consulta
 
 **e)** O sistema deve permitir registrar a devolução de um veículo.
+R: RF - é um comportamente ativo ou serviço do software oferecido ao atendente para a conclusão do processo de locação
 
 **f)** Clientes menores de 21 anos não podem alugar veículos da
 categoria premium.
+R: RN - é uma política da empresa baseada numa condição específica, definindo oq é permitido ou proibido no negócio
 
 **g)** O sistema deve exigir autenticação dos funcionários.
+R: RNF - segurança, estabelece uma restrição e um atributo de qualidade focado na proteção do acesso do software e segurança das operações da empresa
 
 Depois responda:
 
 > Qual é a principal diferença entre uma Regra de Negócio e um Requisito
 > de Software?
+R: RN pertence ao domínio do problema (políticas, normas, diretrizes, cálculos etc) e independe do software existindo mesmo sem qualquer sistema computadorizado. Já o RF pertence ao domínio da solução, especifica as funcionalidades do software, o que deve fazer e quais restrições tecnicas atender para garantir o cumprimentos das RN
 
 ------------------------------------------------------------------------
 
@@ -75,16 +87,26 @@ A partir da descrição:
 
 **a)** Identifique as **Regras de Negócio** e numere-as como `RN01`,
 `RN02` etc.
+R:
+RN01 - Limite de vagas, cada aula coletiva possui uma quant max de participantes q não pode ser ultrapassada
+RN02 - Conflito de horário, um aluno n pode possuir duas ou mais reservas ativas no mesmo horário
+RN03 - Mensalidade vencida, alunos com mensalidade vencida ficam bloqueados de realizar novos agendamentos de aulas
 
 **b)** Identifique os **Requisitos Funcionais** e numere-os como `RF01`,
 `RF02` etc.
+R:
+RF01 - Consultar aulas disponíveis, o sistema deve permitir q o aluno consulte e visualize suas aulas coletivas disponíveis
+RF02 - Realizar uma reserva de aula, o sistema deve permitir q o aluno solicite a reserva de vaga em uma aula coletiva
+RF03 - Cancelar uma reserva de aula, o sistema deve permitir q o aluno cancele uma reserva, desde que realizada previamente
 
 **c)** Identifique os **Requisitos Não Funcionais**, classifique seu
 tipo e justifique.
+R:
+RNF01 - Tempo de resposta da consulta (desempenho), a consulta das aulas disponíveis deve apresentar o resultado em até dois segundos, estabelecendo um critério quantitativo e mensurável de velocidade
 
 **d)** Explique como uma Regra de Negócio pode influenciar um ou mais
 Requisitos Funcionais.
-
+R: A Regra de Negócio representa uma diretriz ou restrição do domínio da empresa e influencia o Requisito Funcional ao impor validações, condições e bloqueios aos fluxos do sistema. Ela determina como a funcionalidade deve se comportar diante de limitações do negócio, como impedir um agendamento caso haja pendências financeiras ou limite de vagas atingido
 ------------------------------------------------------------------------
 
 # Exercício 4
@@ -100,17 +122,32 @@ Considere um sistema de biblioteca com as seguintes funcionalidades:
 Responda:
 
 **a)** Identifique os possíveis atores.
+R: Bibliotecario - responsável pelos empréstimos e devoluções; Aluno - realiza consultas e acompanha sua situação na biblioteca; Coordenador da biblioteca - administrativo para gerenciar o acervo e os usuários; Serviço externo de autenticação - fornece serviço de validação de acesso ao software
 
 **b)** Identifique os principais Casos de Uso.
+R: 
+UC01 - registrar empréstimos
+UC02 - registrar devolução
+UC03 - consultar livros disponíveis
+UC04 - consultar histórico de empréstimos
+UC05 - cadastrar novo livro
+UC06 - bloquear usuário
 
 **c)** Relacione cada ator aos Casos de Uso com os quais interage.
+R: 
+Bibliotecario: UC01 - Registrar Empréstimo e UC02 - Registrar Devolução
+Aluno: UC03 - Consultar Livros Disponíveis e UC04 - Consultar Histórico de Empréstimos
+Coordenador da biblioteca: UC05 - Cadastrar Novo Livro e UC06 - Bloquear Usuário
+Serviço externo de autenticação: interage prestando suporte de validação aos fluxos que exigem autenticação do usuário
 
 **d)** O serviço externo de autenticação pode ser considerado um ator?
 Justifique.
+R: Sim, um ator não se limita a seres humanos, é qualquer entidade externa à fronteira do sistema que interage com ele trocando informações. Como o serviço de autenticação é um software externo que responde a requisições de validação de acesso, ele é classificado como um ator secundário (ou de apoio).
 
 **e)** Explique por que itens como **"clicar no botão Emprestar"**,
 **"abrir a tela de livros"** e **"digitar matrícula"** normalmente não
 devem ser modelados como Casos de Uso.
+R: Pq esses itens como são apenas passos físicos de interação de interface, e não objetivos de negócio. O caso de uso deve representar uma sequencia de ações q entrega valor tangível para o ator.
 
 ------------------------------------------------------------------------
 
