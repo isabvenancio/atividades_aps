@@ -297,28 +297,44 @@ Considere um sistema de restaurante:
 > consultar relatórios de vendas.
 
 **a)** Identifique os atores.
+R: Atendente: responsável pela gestão dos pedidos; Cozinheiro: responsável pelo acopanhamento do preparo e finalização dos pratos; Caixa: responsável pelo recebimento financeiro; Gerente: responsável pela gestão do negócio e análise estratégica
 
 **b)** Identifique os Casos de Uso.
+R: 
+UC01 - registrar pedidos
+UC02 - cancelar pedidos
+UC03 - consultar pedidos
+UC04 - marcar pedido como pronto
+UC05 - registrar pagamento
+UC06 - consultar relatórios de vendas
 
 **c)** Construa o **Diagrama de Casos de Uso**, representando as
 associações entre atores e funcionalidades.
+R:
+Atendente -> UC01 e UC02
+Cozinheiro -> UC03 e UC04
+Caixa -> UC05
+Gerente -> UC06
 
 **d)** Explique o que representa a fronteira do sistema.
+R: a fronteira do sistema (retangulo no diagrama) delimita o escopo do software, divide oq é interno e externo a ele
 
 **e)** Explique a diferença entre:
 
 ``` text
-ATOR
+ATOR - representa um papel externa q interage com o software para atingir uma meta (quem interage com o sistema)
 ```
 
 e:
 
 ``` text
-CASO DE USO
+CASO DE USO - representa a sequencia de interações e comportamentos q o sistema realiza para entregar um resultado de valor (o que o sistema faz)
 ```
+
 
 **f)** O Diagrama de Casos de Uso mostra a ordem em que as operações
 acontecem? Justifique.
+R: não, o diagrama de casos de uso é estático e declarativo, mostrando apenas quais atores tem permissça ou associação com quais uncionalidades, o encadeamento temporal das ações é definido na especificação textual do caso de uso e detalhado em diagramas de sequencia
 
 ------------------------------------------------------------------------
 
@@ -347,18 +363,27 @@ ProdutoRepository
 ```
 
 **a)** Construa um **Diagrama de Sequência** para o cenário.
+R: ![exercicio8](image.png)
+INTERFACE
+CONTROLE / APLICAÇÃO
+DOMÍNIO
+INFRAESTRUTURA
 
 **b)** Indique qual participante deveria receber inicialmente a
 interação do ator.
+R: TelaProduto (interface), é o componente que interage diretamento com o ator (Vendedor), responsável por capturar os dados e apresentar o resultado final
 
 **c)** Qual participante poderia ser responsável por coordenar a
 operação?
+R: ProdutoController (controle), atua como orquestrador do fluxo da aplicação, recebe as requiscições da camada da interface e direciona para os serviços
 
 **d)** Qual participante seria responsável pela consulta/persistência
 dos dados?
+R: ProdutoRepository (persistencia), é o componente q tem acesso direto a base de dados para realizar a busca e recuperar registros
 
 **e)** Explique por que a ordem vertical das mensagens é importante em
 um Diagrama de Sequência.
+R: Pq indica a passagem do tempo (linha do tempo avançando de cima para baixo), determinando a sequencia cronológica exata em q os eventos e chamadas de método acontecem, garantindo a dependencia temporal correta do fluxo
 
 ------------------------------------------------------------------------
 
@@ -406,9 +431,13 @@ Construa um **Diagrama de Sequência** contendo:
 -   registro da movimentação;
 -   retorno do resultado ao cliente.
 
+R: ![exercicio9](image-1.png)
+
+
 Depois explique:
 
 > Qual é a finalidade do fragmento `alt` em um Diagrama de Sequência?
+R: alt (alternative) é utilizado para modelar estruturas de decisão condicionais (estilo if/else), dividindo a execução do diagrama em dois ou mais blocos exclusivos, onde apenas um dos caminhos será executado no tempo de execução, dependendo do resultado da avaliação da condicação lógica de guarda
 
 ------------------------------------------------------------------------
 
@@ -429,10 +458,20 @@ Realize as seguintes atividades:
 ## Parte A --- Regras e Requisitos
 
 **a)** Identifique as Regras de Negócio.
+R: 
+RN01 - sem conflito de agenda, um médico n pode possuir duas ou mais consultas agendadas no msm horário
+RN02 - horarios disponíveis, o agendamento de uma consulta é permitido apenas em horários livres
 
 **b)** Identifique os Requisitos Funcionais.
+R: 
+RF01 - agendar consultas, o sistema deve permitir q o atendente registre o agendamento de consulta
+RF02 - cancelar consulta, o sistema deve permitir q o atendente registre o cancelamento de consultas, desde q previamente agendadas
+RF03 - consultar consultas agendadas, o sistema deve permitir q o paciente consulte suas consultas agendadas
+RF04 - consultar horários disponíveis, o sistema deve permitir a consulta dos horários livres dos médicos
 
 **c)** Identifique o Requisito Não Funcional e classifique-o.
+R: 
+RNF01 - tempo de resposta da consulta (desempenho), a consulta dos horários disponíveis deve ser realizada e exibida em até dois segundos
 
 ## Parte B --- Caso de Uso
 
@@ -451,10 +490,32 @@ defina:
 -   pelo menos um fluxo alternativo ou de exceção;
 -   pós-condição.
 
+R:
+Ator Principal: Atendente.
+Objetivo: Registrar uma nova consulta médica para um paciente em uma data e horário específicos.
+Pré-condições: Atendente autenticado no sistema e Paciente e Médico previamente cadastrados.
+Pós-condições: Consulta gravada com status "Agendada" e Horário bloqueado na agenda do médico.
+
+Fluxo Principal:
+1. Atendente solicita o agendamento de uma consulta.
+2. Sistema solicita o paciente, médico, data e horário desejados.
+3. Atendente informa os dados solicitados.
+4. Sistema verifica se o horário está disponível e sem conflitos 
+5. Atendente confirma a operação.
+6. Sistema persiste o agendamento e bloqueia o horário.
+7. Sistema exibe a mensagem de confirmação do agendamento.
+
+Fluxo de Exceção (FE01 — Horário Indisponível)
+1. No passo 4, se o sistema identificar que o horário está ocupado ou é inválido [RN01, RN02]:
+2. Sistema exibe mensagem de alerta notificando a indisponibilidade.
+3. Sistema solicita que o atendente escolha outro horário ou cancele a operação.
+
 ## Parte C --- Diagrama de Casos de Uso
 
 Construa um Diagrama de Casos de Uso contendo os atores e
 funcionalidades identificados.
+
+R: ![exercicio10_parteC](image-2.png)
 
 ## Parte D --- Diagrama de Sequência
 
@@ -478,6 +539,8 @@ Utilize um fragmento `alt` para representar:
 [horário indisponível]
 ```
 
+R: ![exercicio10_parteD](image-3.png)
+
 ## Parte E --- Integração dos conceitos
 
 Explique a diferença de finalidade entre os seguintes artefatos:
@@ -496,3 +559,10 @@ DIAGRAMA DE SEQUÊNCIA
 
 Na resposta, explique **qual pergunta cada artefato ajuda a responder
 durante a análise e o projeto do software**.
+
+R: 
+REGRA DE NEGÓCIO: Responde a "Quais são as políticas e restrições da organização?" — Define o que é permitido ou proibido no domínio do negócio, independentemente do software existir.
+REQUISITO: Responde a "O que o sistema deve fazer e quais qualidades deve atender?" — Traduz as necessidades do negócio e dos usuários em capacidades funcionais e restrições de qualidade do software.
+CASO DE USO: Responde a "Como o ator e o sistema interagem no tempo para atingir uma meta de negócio?" — Detalha a sequência temporal do diálogo, organizando o fluxo principal, desvios e exceções.
+DIAGRAMA DE CASOS DE USO: Responde a "Quem são os atores e qual é o escopo/fronteira das funcionalidades do sistema?" — Oferece uma visão estática de alto nível sobre quem pode executar qual funcionalidade.
+DIAGRAMA DE SEQUÊNCIA: Responde a "Como os componentes internos do software colaboram no tempo para realizar um cenário específico?" — Refina a arquitetura técnica, dividindo responsabilidades entre telas, controllers, serviços e banco de dados.
