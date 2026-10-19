@@ -171,14 +171,32 @@ Ator: Cliente
 Responda:
 
 **a)** Identifique pelo menos **cinco problemas** nessa especificação.
+R: 1. focada na GUI, descrevendo navegação física em vez de interação de negócio; 2. passos vagos e sem objeto, expressões escolhe e verifica não especificam sobre quais dados ou entidades operam; 3. ausencia de regras de negócio e validações durante o fluxo; 4. falta de retorno visual ao usuário encerrando o fluxo sem descrever a exibição de uma mensagem de confirmação; 5. ausencia de estrutura complementar do Caso de Uso (objetivo, pre e pós condições, fluxos alternativos e exceção)
+
 
 **b)** Explique por que expressões como "sistema verifica", "sistema
 salva" e "sistema finaliza" podem prejudicar a compreensão.
+R: essas expressões genéricas não esclarecem o que esta sendo validado, e nem especificando quais dados estão sendo gravados nem o estado final da entidade no banco, gerando uma instrução vaga q não indica a resposta dada ao usuário ou o encerramento do processo do negócio
 
 **c)** Quais elementos importantes de uma especificação de Caso de Uso
 estão ausentes?
+R: 
+Objetivo: A meta concreta de negócio a ser alcançada pelo ator.
+Pré-condições: As condições obrigatórias antes de iniciar o fluxo (ex.: Cliente autenticado no sistema).
+Pós-condições: O estado garantido do sistema após o sucesso (ex.: Reserva gravada e vaga bloqueada).
+Regras de Negócio (RNs) vinculadas: As políticas do domínio aplicadas em cada passo do fluxo.
+Fluxos Alternativos (FA) e de Exceção (FE): O tratamento para caminhos secundários, erros e falhas de validação.
 
 **d)** Reescreva o fluxo principal tornando as ações mais claras.
+R: 
+UC01 — Fazer Reserva
+1. Cliente solicita a realização de uma reserva.
+2. Sistema solicita os dados da reserva (data, horário e acomodação/serviço).
+3. Cliente informa os dados solicitados.
+4. Sistema valida a disponibilidade e a consistência dos dados.
+5. Cliente confirma o agendamento da reserva.
+6. Sistema persiste a reserva no banco de dados e bloqueia a vaga para o período escolhido.
+7. Sistema exibe a mensagem de confirmação e o comprovante da reserva.
 
 ------------------------------------------------------------------------
 
@@ -222,10 +240,50 @@ A especificação deve conter:
 -   Regras de Negócio relacionadas;
 -   Requisitos relacionados.
 
+R:
+UC01 — Registrar Reserva
+
+Objetivo: Registrar uma nova reserva de quarto de hotel solicitada por um cliente.
+Ator Principal: Atendente.
+Pré-condições: Atendente autenticado no sistema e Cliente previamente cadastrado no sistema.
+Pós-condições: Reserva gravada com status "Confirmada"; Quarto bloqueado para o período selecionado e Comprovante e código de confirmação da reserva gerados.
+
+Fluxo Principal:
+1. Atendente solicita o registro de uma nova reserva.
+2. Sistema solicita a identificação do cliente e as datas de entrada (check-in) e saída (check-out).
+3. Atendente informa o cliente e o período desejado.
+4. Sistema valida se a data de saída é posterior à data de entrada [RN02].
+5. Sistema verifica se o cliente possui outra reserva ativa para o mesmo período [RN03].
+6. Sistema apresenta as opções de quartos disponíveis para o período informado [RN01].
+7. Atendente seleciona o quarto desejado e confirma a reserva.
+8. Sistema persiste a reserva, bloqueia o quarto para o período e gera o código de confirmação [RN04].
+9. Sistema exibe a mensagem de confirmação e disponibiliza o comprovante da reserva.
+
+Fluxos Alternativos:
+FA01 — Cliente Não Cadastrado (no passo 3):
+  1. Atendente verifica que o cliente não possui cadastro no sistema.
+  2. Atendente realiza o cadastro do novo cliente.
+  3. Sistema grava o cadastro e retorna ao passo 3 do fluxo principal.
+
+Fluxos de Exceção:
+FE01 — Datas Inválidas (no passo 4):
+  1. Sistema identifica que a data de saída é igual ou anterior à data de entrada [RN02].
+  2. Sistema exibe mensagem de erro e solicita a correção das datas.
+FE02 — Cliente com Reserva Conflitante (no passo 5):
+  1. Sistema identifica que o cliente já possui reserva para o período informado [RN03].
+  2. Sistema alerta a duplicidade de período e interrompe a reserva.
+FE03 — Indisponibilidade de Quarto (no passo 6):
+  1. Sistema identifica que não existem quartos disponíveis para o período solicitado [RN01].
+  2. Sistema exibe alerta de indisponibilidade e permite alterar as datas ou cancelar a operação.
+
+Regras de Negócio Relacionadas: RN01, RN02, RN03, RN04
+Requisitos Relacionados: RF01
+
 Ao final, explique:
 
 > Como podemos verificar se o Caso de Uso está coerente com as Regras de
 > Negócio?
+R: A coerência é verificada vinculando cada Regra de Negócio ao ponto exato do Caso de Uso onde ela deve ser validada e garantindo que existam fluxos de exceção para tratar suas violações (matriz de rastreabilidade). Além disso, confirma-se que o fluxo principal não permite ações proibidas pelas regras do negócio e que os cenários de teste derivam diretamente dessas restrições.
 
 ------------------------------------------------------------------------
 
