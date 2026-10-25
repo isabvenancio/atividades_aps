@@ -107,6 +107,7 @@ RNF01 - Tempo de resposta da consulta (desempenho), a consulta das aulas dispon�
 **d)** Explique como uma Regra de Negócio pode influenciar um ou mais
 Requisitos Funcionais.
 R: A Regra de Negócio representa uma diretriz ou restrição do domínio da empresa e influencia o Requisito Funcional ao impor validações, condições e bloqueios aos fluxos do sistema. Ela determina como a funcionalidade deve se comportar diante de limitações do negócio, como impedir um agendamento caso haja pendências financeiras ou limite de vagas atingido
+
 ------------------------------------------------------------------------
 
 # Exercício 4
@@ -269,9 +270,11 @@ Fluxos de Exceção:
 FE01 — Datas Inválidas (no passo 4):
   1. Sistema identifica que a data de saída é igual ou anterior à data de entrada [RN02].
   2. Sistema exibe mensagem de erro e solicita a correção das datas.
+
 FE02 — Cliente com Reserva Conflitante (no passo 5):
   1. Sistema identifica que o cliente já possui reserva para o período informado [RN03].
   2. Sistema alerta a duplicidade de período e interrompe a reserva.
+
 FE03 — Indisponibilidade de Quarto (no passo 6):
   1. Sistema identifica que não existem quartos disponíveis para o período solicitado [RN01].
   2. Sistema exibe alerta de indisponibilidade e permite alterar as datas ou cancelar a operação.
