@@ -354,22 +354,41 @@ R: Porque o Diagrama de Classes de Domínio representa estritamente os conceitos
 
 Classifique as responsabilidades em **Apresentação/Interface**, **Aplicação**, **Domínio** ou **Infraestrutura**:
 
-1. Receber requisições HTTP.
-2. Validar regras de negócio.
-3. Coordenar a execução de um Caso de Uso.
-4. Consultar registros no banco de dados.
-5. Representar uma entidade do domínio.
-6. Converter dados recebidos em objetos.
-7. Persistir alterações.
-8. Retornar uma resposta HTTP.
+1. Receber requisições HTTP.$\rightarrow$ Apresentação / Interface
+2. Validar regras de negócio.$\rightarrow$ Domínio
+3. Coordenar a execução de um Caso de Uso.$\rightarrow$ Aplicação
+4. Consultar registros no banco de dados.$\rightarrow$ Infraestrutura
+5. Representar uma entidade do domínio.$\rightarrow$ Domínio
+6. Converter dados recebidos em objetos.$\rightarrow$ Apresentação / Interface
+7. Persistir alterações.$\rightarrow$ Infraestrutura
+8. Retornar uma resposta HTTP.$\rightarrow$ Apresentação / Interface
 
 Responda:
 
 a) Qual a finalidade de cada camada?  
-b) Quais classes poderiam existir em cada uma?  
+R: 
+Apresentação / Interface: Lida com a interação com o usuário ou sistemas externos (protocolo HTTP, rotas, serialização/deserialização de dados, validação sintática de DTOs e códigos de resposta).
+Aplicação: Orquestra o fluxo de execução dos casos de uso, mediando o diálogo entre a camada de apresentação, os serviços de domínio e os repositórios, sem conter regras do negócio.
+Domínio: Coração do software. Contém as entidades, objetos de valor e regras essenciais de negócio da organização, mantendo-se independente de frameworks e tecnologias.
+Infraestrutura: Fornece o suporte técnico para o sistema, lidando com persistência em banco de dados, comunicação com APIs externas, envio de e-mails e frameworks.
+
+b) Quais classes poderiam existir em cada uma? 
+R: 
+Apresentação: ProdutoController, ProdutoRequestDTO, ProdutoResponseDTO, GlobalExceptionHandler.
+Aplicação: RegistrarPedidoUseCase, ProdutoAppService.
+Domínio: Produto, Pedido, Cliente, ValidadorEstoqueService, RegraDescontoPolicy.
+Infraestrutura: ProdutoRepositoryJpaImpl, DatabaseConnection, SmtpEmailService.
+
 c) Diferencie camada lógica e diretório físico.  
+R: 
+Camada Lógica: É um conceito e padrão arquitetural de separação de responsabilidades e controle de dependências entre componentes.
+Diretório Físico: É a estrutura de pastas e pacotes no sistema de arquivos do projeto (ex.: /controller, /domain, /infra). Uma camada lógica pode se organizar em um ou múltiplos diretórios físicos.
+
 d) A arquitetura exige quatro diretórios?  
+R: Não. As quatro camadas são uma divisão conceitual (comum no DDD). O projeto pode ser estruturado fisicamente por funcionalidades ou módulos (ex.: pacote pedido/ contendo suas respectivas subpastas ou classes), desde que as regras lógicas de acoplamento e dependência entre as camadas sejam mantidas.
+
 e) Como a separação ajuda a manutenção?
+R: Ao isolar as responsabilidades, mudanças em uma área tecnológica não afetam o negócio. Se o banco de dados for alterado (ex.: de PostgreSQL para MongoDB), modifica-se apenas a camada de Infraestrutura. Se a interface mudar de HTTP/REST para gRPC, altera-se apenas a Apresentação. As regras de negócio no Domínio permanecem intactas e testáveis.
 
 ## Exercício 11 — Controller, Service, Entity e Repository
 
@@ -378,12 +397,29 @@ Considere `ProdutoController`, `ProdutoService`, `Produto` e `ProdutoRepository`
 Responda:
 
 a) Responsabilidade de cada classe.  
+R: 
+ProdutoController (Apresentação): Trata a requisição HTTP, extrai e valida os parâmetros, delega a ação para a camada de aplicação e constrói a resposta HTTP.
+ProdutoService (Aplicação): Coordena a execução do caso de uso (gerencia a transação, busca a entidade no repositório, invoca os métodos do domínio e solicita a persistência).
+Produto (Domínio / Entidade): Encapsula os atributos e os comportamentos essenciais do produto (ex.: debitarEstoque(), aplicarDesconto()).
+ProdutoRepository (Infraestrutura / Contrato): Define as operações de consulta e persistência dos dados de Produto.
+
 b) Quem recebe a requisição HTTP?  
+R: ProdutoController.
+
 c) Quem coordena o Caso de Uso?  
+R: ProdutoService
+
 d) Quem representa conceitos e comportamentos do domínio?  
+R: Produto (Entidade do Domínio).
+
 e) Quem oferece acesso aos dados?  
+R: ProdutoRepository
+
 f) Por que a entidade não deveria depender do controlador HTTP?  
+R: Porque a Entidade pertence ao Domínio, que deve ser agnóstico a tecnologia. Se a Entidade dependesse da camada de Apresentação/HTTP, qualquer mudança de protocolo (ex.: migração para gRPC, CLI ou mensageria) quebraria o modelo de negócio central.
+
 g) Construa um Diagrama de Classes com dependências relevantes.
+R: ![exercicio 11](exercicio11.png)
 
 **Atenção:** diferencie o contrato de repositório de sua implementação concreta na infraestrutura.
 
@@ -398,11 +434,25 @@ O controlador também calcula descontos, valida estoque e determina regras de pr
 Responda:
 
 a) Quais problemas existem?  
-b) Acesso direto ao repositório pelo controlador é sempre incorreto? Justifique.  
+R: 
+Controlador Inchado ("Fat Controller"): O controlador acumula responsabilidades de HTTP, regras de negócio e acesso a dados, violando o Princípio da Responsabilidade Única (SRP).
+Vazamento da Lógica de Negócio: As regras (cálculo de descontos e estoque) ficam presas na camada web, impedindo o reuso por outros pontos de entrada (como rotinas em segundo plano ou APIs).
+Falta de Abstração de Domínio: A entidade torna-se uma estrutura anêmica de dados e o código fica difícil de testar de forma isolada.
+
+b) Acesso direto ao repositório pelo controlador é sempre incorreto? Justifique.
+R: Não é sempre incorreto. Em consultas simples de leitura sem lógica de negócio (ex.: pesquisas diretas para exibição em tela ou visões de leitura em arquiteturas CQRS), pular a camada de serviço pode ser aceitável para evitar código repetitivo sem valor agregado (passthrough service). No entanto, quando há validações ou regras de negócio envolvidas, a intermediação é obrigatória.
+
 c) Como reorganizar a arquitetura?  
+R: Introduzindo uma camada de Aplicação (ProdutoService) para orquestrar o fluxo e movendo o cálculo de descontos, validação de estoque e regras de preço para a entidade de Domínio (Produto).
+
 d) O que pertence ao domínio?  
+R: Validação e abatimento de estoque: produto.validarEstoque(qtd) e produto.debitarEstoque(qtd) e Regras de precificação e cálculo de desconto: produto.aplicarDesconto(percentual).
+
 e) O que pertence à aplicação?  
+R: Buscar o objeto Produto no repositório pelo ID, chamar as operações do domínio na entidade Produto, salvar o estado atualizado através do ProdutoRepository e gerenciar transações e converter retornos.
+
 f) Construa um Diagrama de Classes da solução.
+R: ![exercicio 12](exercicio12.png)
 
 ---
 
@@ -430,12 +480,61 @@ src/main/java/sistema/
 
 Responda:
 
-a) Quais dificuldades surgem com o crescimento?  
+a) Quais dificuldades surgem com o crescimento? 
+R: 
+Baixa coesão e navegação difícil: Dezenas ou centenas de arquivos misturados em um único diretório tornam o projeto caótico para navegar.
+Perda de encapsulamento: Todas as classes precisam ser declaradas como public, impedindo o uso da visibilidade de pacote (package-private).
+Alto risco de acoplamento desordenado: Não há barreiras arquiteturais que limitem o acesso indevido entre componentes.
+ 
 b) Proponha organização por camadas.  
+R: 
+src/main/java/sistema/
+├── controller/
+│   ├── ClienteController.java
+│   ├── ProdutoController.java
+│   └── PedidoController.java
+├── service/
+│   ├── ClienteService.java
+│   ├── ProdutoService.java
+│   └── PedidoService.java
+├── repository/
+│   ├── ClienteRepository.java
+│   ├── ProdutoRepository.java
+│   └── PedidoRepository.java
+└── model/
+    ├── Cliente.java
+    ├── Produto.java
+    └── Pedido.java
+
 c) Proponha organização por funcionalidades/módulos.  
+R: 
+src/main/java/sistema/
+├── cliente/
+│   ├── Cliente.java
+│   ├── ClienteController.java
+│   ├── ClienteService.java
+│   └── ClienteRepository.java
+├── produto/
+│   ├── Produto.java
+│   ├── ProdutoController.java
+│   ├── ProdutoService.java
+│   └── ProdutoRepository.java
+└── pedido/
+    ├── Pedido.java
+    ├── PedidoController.java
+    ├── PedidoService.java
+    └── PedidoRepository.java
+
 d) Compare as propostas.  
+R: 
+Por Camadas: Agrupa arquivos pelo papel técnico/tecnológico (todas as telas/controllers juntas, todos os serviços juntos).
+Por Funcionalidade: Agrupa arquivos pelo contexto/domínio de negócio (tudo que diz respeito ao contexto de "Pedido" fica junto).
+
 e) Qual facilita localizar tudo relacionado a `Registrar Pedido`?  
+R: A Organização por Funcionalidades (c). Todos os arquivos necessários para entender e alterar o fluxo de pedidos (Pedido, PedidoController, PedidoService, PedidoRepository) estão no mesmo diretório (pedido/).
+
 f) Justifique a escolha para um sistema médio.
+R: Para um sistema de médio/grande porte, a Organização por Funcionalidades (ou híbrida) é a escolha mais recomendada. Ela proporciona alta coesão espacial, facilita o trabalho simultâneo de múltiplos desenvolvedores sem conflitos de mesclagem (merge conflicts), permite o isolamento de pacotes (package-private) e facilita a futura extração de módulos em microserviços.
 
 ## Exercício 14 — Organização por camadas × funcionalidades
 
@@ -476,10 +575,41 @@ src/main/java/br/edu/sistema/
 Responda:
 
 a) Qual o critério de cada organização?  
+R: 
+Estrutura A (Por camadas): Critério técnico/arquitetural (baseado nos padrões MVC/Layered).
+Estrutura B (Por funcionalidades): Critério de negócio/domínio (Screaming Architecture / DDD).
+
 b) Vantagens e desvantagens?  
+R: 
+Estrutura A
+Vantagens: Padronização técnica simples para iniciantes e Separação clara das responsabilidades de infraestrutura/framework.
+Desvantagens: Alta dispersão de arquivos para implementar uma funcionalidade e Força todas as classes a serem públicas.
+
+Estrutura B
+Vantagens: Alta coesão (tudo sobre uma funcionalidade em um só lugar), Permite o uso de visibilidade package-private e Facilita a exclusão ou manutenção de módulos inteiros.
+Desvantagens: Exige maior disciplina para evitar acoplamento cíclico entre módulos.
+
 c) Como afetam a compreensão da arquitetura?  
+R: 
+Por Camadas: Destaca o stack tecnológico e a infraestrutura do software.
+Por Funcionalidades: Destaca o domínio e as regras de negócio da aplicação (a arquitetura "grita" o propósito do sistema).
+
 d) Diretórios garantem boa arquitetura?  
+R: 
+Não. Diretórios são apenas uma organização física dos arquivos no disco. Uma boa arquitetura depende do controle estrito de dependências lógicas, baixo acoplamento, alta coesão e distribuição correta de responsabilidades no código.
+
 e) Como combinar módulos por funcionalidade com responsabilidades internas?
+R: Criando pacotes raiz por funcionalidade e subpacotes por camada técnica dentro de cada módulo:
+src/main/java/br/edu/sistema/
+└── pedido/
+    ├── controller/
+    │   └── PedidoController.java
+    ├── service/
+    │   └── PedidoService.java
+    ├── domain/
+    │   └── Pedido.java
+    └── repository/
+        └── PedidoRepository.java
 
 ## Exercício 15 — Documentação das classes
 
@@ -493,15 +623,18 @@ Documente nome, responsabilidade, operações públicas, parâmetros, resultados
 
 | Campo | Descrição |
 |---|---|
-| Classe | |
-| Responsabilidade | |
-| Operações | |
-| Dependências | |
-| RN relacionadas | |
-| RF relacionadas | |
-| UC relacionados | |
+| **Classe** | `PedidoService` |
+| **Responsabilidade** | Orquestrar a execução do caso de uso de registro de pedidos, coordenando validações de estoque, aplicação de regras de precificação e persistência do pedido. |
+| **Operações** | `public void registrarPedido(Pedido pedido)`<br>• **Parâmetros:** `pedido: Pedido` (Instância contendo cliente e itens selecionados).<br>• **Resultado Esperado:** Validação e persistência do pedido no banco de dados com alteração de status para "Registrado". |
+| **Dependências** | `PedidoRepository` (para persistência) e `EstoqueService` (para validação e reserva de estoque). |
+| **RN relacionadas** | `RN01` (Associação a cliente), `RN02` (Mínimo um item), `RN03` (Estoque suficiente) e `RN04` (Cálculo do total). |
+| **RF relacionadas** | `RF01` — O sistema deve permitir registrar pedidos. |
+| **UC relacionados** | `UC01` — Registrar Pedido. |
 
 **Discussão:** qual a diferença entre documentar uma classe e documentar um Caso de Uso?
+R:
+Documentar um Caso de Uso: Foca no domínio do problema (visão do usuário/negócio). Descreve a interação em linguagem natural entre atores e sistema, focando em objetivos de negócio, pré/pós-condições, fluxos principais, alternativos e de exceção.
+Documentar uma Classe: Foca no domínio da solução (visão técnica do desenvolvedor). Descreve a estrutura interna do código, contratos de software, assinaturas de métodos, tipos de dados, visibilidades, tratamento de exceções e dependências entre componentes orientados a objetos.
 
 ---
 
@@ -522,13 +655,63 @@ RN01 → RF01 → UC01 → DIAGRAMA DE SEQUÊNCIA
 → CLASSES E OPERAÇÕES → MÓDULOS/DIRETÓRIOS
 ```
 
+R:
+Cadeia de Rastreabilidade Integrada
+RN01 (Produto disponível) 
+  → RF01 (Registrar Pedido) 
+    → UC01 (Registrar Pedido) 
+      → DIAGRAMA DE SEQUÊNCIA (Validar estoque e confirmar) 
+        → CLASSES E OPERAÇÕES (Pedido.confirmar(), Produto.validarEstoque()) 
+          → MÓDULOS/DIRETÓRIOS (br.edu.sistema.pedido)
+
+
+Diagrama de Sequência (Refinamento da RN01)
+sequenceDiagram
+    autonumber
+    actor A as Atendente
+    participant C as PedidoController
+    participant S as PedidoService
+    participant P as Produto
+    participant Ped as Pedido
+    participant R as PedidoRepository
+
+    A->>C: 1. confirmarPedido(pedidoId)
+    C->>S: 2. processarConfirmacao(pedidoId)
+    S->>P: 3. verificarDisponibilidade(qtd)
+    
+    alt [RN01 — Estoque suficiente]
+        P-->>S: Estoque disponível
+        S->>Ped: 4. confirmar()
+        S->>R: 5. salvar(pedido)
+        R-->>S: Pedido salvo
+        S-->>C: Sucesso
+        C-->>A: Exibe confirmação
+    else [RN01 — Produto indisponível]
+        P-->>S: Estoque insuficiente
+        S-->>C: Erro: Produto indisponível
+        C-->>A: Exibe alerta de erro [RN01]
+    end
+
 Responda:
 
 a) Quais classes são necessárias?  
+R: 
+Apresentação: PedidoController
+Aplicação: PedidoService
+Domínio: Pedido, ItemPedido, Produto
+Infraestrutura: PedidoRepository
+
 b) Quem verifica disponibilidade?  
+R: A entidade de domínio Produto (ou EstoqueService), que possui o conhecimento da quantidade em estoque.
+
 c) Quem confirma o pedido?  
+R: A entidade de domínio Pedido (através do método confirmar()), alterando seu estado interno.
+
 d) Como a RN01 aparece na sequência?  
+R: Através do fragmento condicional alt com a guarda [Estoque suficiente]. Se atendida, prossegue para a confirmação; caso contrário, desvia para o tratamento de erro.
+
 e) Como documentar a relação entre RN01 e as classes?
+R: Por meio de uma Matriz de Rastreabilidade e anotações/JavaDoc nos métodos correspondentes (PedidoService.processarConfirmacao() e Produto.verificarDisponibilidade()).
 
 ## Exercício 17 — Arquitetura de um sistema de estoque
 
@@ -544,13 +727,61 @@ RN04 — Somente usuários autorizados podem registrar movimentações.
 Realize:
 
 a) Identifique classes do domínio.  
+R: Produto; Movimentacao e Usuario
+
 b) Defina atributos e operações.  
+R: 
+Produto:
+    Atributos: id: Long, nome: String, quantidadeEstoque: Integer, preco: Decimal
+    Operações: temEstoqueSuficiente(qtd): Boolean, creditarEstoque(qtd): void, debitarEstoque(qtd): void
+Movimentacao:
+    Atributos: id: Long, tipo: TipoMovimentacao (ENTRADA/SAIDA), quantidade: Integer, dataHora: DateTime
+    Operações: gerarRegistro(): void
+Usuario:
+    Atributos: id: Long, nome: String, perfil: PerfilUsuario
+    Operações: podeRegistrarMovimentacao(): Boolean
+
 c) Identifique associações e multiplicidades.  
+R: 
+Produto 1 ──* Movimentacao: Um produto pode ter várias movimentações; cada movimentação pertence a um único produto.
+Usuario 1 ──* Movimentacao: Um usuário pode registrar várias movimentações; cada movimentação é registrada por um único usuário.
+
 d) Construa Diagrama de Classes do domínio.  
+R: ![exercicio 17](exercicio17.png)
+
 e) Identifique componentes de aplicação.  
+R: 
+MovimentacaoService (coordena fluxos de entrada e saída)
+ProdutoController / MovimentacaoController (interfaces de entrada)
+
 f) Identifique infraestrutura.  
+R: 
+ProdutoRepository / MovimentacaoRepository (persistência JPA/SQL)
+SecurityService (autenticação e autorização)
+
 g) Proponha diretórios.  
+R: 
+src/main/java/br/edu/estoque/
+├── produto/
+│   ├── Produto.java
+│   ├── ProdutoService.java
+│   └── ProdutoRepository.java
+├── movimentacao/
+│   ├── Movimentacao.java
+│   ├── TipoMovimentacao.java
+│   ├── MovimentacaoService.java
+│   └── MovimentacaoRepository.java
+└── usuario/
+    ├── Usuario.java
+    └── SecurityService.java
+
 h) Explique onde cada RN é aplicada.
+R: 
+RN01 (Estoque não negativo): Aplicada na entidade Produto (debitarEstoque()), que lança uma exceção se a quantidade a debitar for maior que o estoque atual.
+RN02 (Entrada gera movimentação): Aplicada no serviço MovimentacaoService.registrarEntrada(), que atualiza o saldo do produto e instancia o objeto Movimentacao.
+RN03 (Saída gera movimentação): Aplicada no serviço MovimentacaoService.registrarSaida(), que debita o produto e cria o registro de Movimentacao.
+RN04 (Usuários autorizados): Aplicada na camada de Aplicação/Segurança (SecurityService) antes de autorizar o processamento da movimentação.
+
 
 ---
 
@@ -574,14 +805,74 @@ Uma empresa deseja gerenciar clientes, produtos e pedidos. O sistema deve permit
 ### Etapa 1 — Análise
 
 Identifique requisitos funcionais, requisitos não funcionais relevantes, atores e Casos de Uso.
+R:
+Atores: Vendedor / Atendente: Responsável por criar, adicionar produtos e confirmar pedidos.
+Cliente: Entidade que realiza as compras.
+Gerente: Responsável por autorizar descontos especiais e consultar relatórios.
+
+Requisitos Funcionais (RF):
+RF01: Permitir o cadastro e manutenção de clientes.
+RF02: Permitir o cadastro, consulta e manutenção de produtos.
+RF03: Permitir registrar pedidos e adicionar itens com quantidade.
+RF04: Calcular o valor total do pedido e aplicar descontos autorizados.
+RF05: Permitir a confirmação de pedidos validados.
+RF06: Permitir o cancelamento de pedidos não enviados.
+RF07: Permitir a consulta ao histórico de pedidos do cliente.
+
+Requisitos Não Funcionais (RNF):
+RNF01 (Desempenho): O cálculo do total e a validação de estoque devem responder em até 2 segundos.
+RNF02 (Integridade/Consistência): As operações de confirmação e baixa de estoque devem ser executadas em contexto transacional (ACID).
+
+Casos de Uso (UC):
+UC01 — Registrar Pedido
+UC02 — Cancelar Pedido
+UC03 — Cadastrar / Consultar Produto
+UC04 — Cadastrar Cliente
+UC05 — Consultar Histórico de Pedidos
 
 ### Etapa 2 — Especificação
 
 Especifique `UC01 — Registrar Pedido` com objetivo, ator, pré-condições, pós-condições, fluxo principal, alternativas, exceções, RN e RF relacionados.
+R: 
+Objetivo: Registrar a compra de um cliente selecionando produtos, validando o estoque, calculando os valores e confirmando a venda.
+Ator Principal: Vendedor.
+Pré-condições: Vendedor autenticado; Cliente e Produtos previamente cadastrados.
+Pós-condições: Pedido gravado com status "Confirmado"; estoque debitado; comprovante gerado.
+Fluxo Principal
+Vendedor solicita o registro de um novo pedido.
+Sistema solicita a identificação do cliente.
+Vendedor informa o cliente [RN01].
+Vendedor informa o código do produto e a quantidade desejada.
+Sistema verifica se há estoque suficiente para a quantidade solicitada [RN03].
+Sistema calcula o subtotal e adiciona o item ao pedido [RN04].
+Passos 4 a 6 repetem-se para cada item a ser adicionado.
+Vendedor solicita a confirmação do pedido [RN02].
+Sistema persiste o pedido com status "Confirmado", debita o estoque e trava edições futuras [RN05].
+Sistema exibe a mensagem de sucesso e o valor total do pedido.
+
+Fluxos Alternativos
+FA01 — Aplicação de Desconto Autorizado (no passo 6):
+Vendedor solicita aplicação de desconto.
+Sistema valida se o desconto está dentro do limite permitido [RN04].
+Sistema recalcula o total do pedido e retorna ao passo 7.
+
+Fluxos de Exceção
+FE01 — Estoque Insuficiente (no passo 5):
+Sistema identifica que o produto não possui estoque suficiente [RN03].
+Sistema exibe mensagem de alerta informando a quantidade disponível e não adiciona o item.
+FE02 — Pedido sem Itens (no passo 8):
+Vendedor tenta confirmar um pedido que não possui itens adicionados [RN02].
+Sistema exibe mensagem de erro e impede a confirmação.
+
+Regras de Negócio Relacionadas: RN01, RN02, RN03, RN04, RN05
+Requisitos Relacionados: RF02, RF03, RF04, RF05
+
 
 ### Etapa 3 — Diagrama de Sequência
 
 Modele o registro de pedido com `Vendedor`, `TelaPedido`, `PedidoController`, `PedidoService`, `EstoqueService` e `PedidoRepository` (ajuste participantes se necessário). Use `alt` para disponibilidade, `loop` para vários produtos e mensagens de confirmação e persistência.
+R: ![exercicio 18_1](exercicio18_1.png)
+
 
 ### Etapa 4 — Identificação das classes
 
@@ -589,16 +880,29 @@ Identifique classes do domínio, aplicação, interfaces e infraestrutura.
 
 | Classe | Responsabilidade | Atributos | Operações |
 |---|---|---|---|
-| | | | |
-| | | | |
+| **TelaPedido** | Apresentação | Capturar entradas do vendedor e exibir o resumo e mensagens do pedido. | `formulario`, `itensExibidos` | `exibirTotal()`, `exibirAlertaErro()` |
+| **PedidoController** | Apresentação | Receber requisições HTTP/UI, validar DTOs e delegar ações para o serviço. | `pedidoService` | `criarPedido()`, `adicionarItem()`, `confirmarPedido()` |
+| **PedidoService** | Aplicação | Orquestrar a execução do caso de uso de pedido, controle transacional e chamadas de serviços. | `pedidoRepository`, `estoqueService` | `iniciarPedido()`, `adicionarItem()`, `confirmarPedido()` |
+| **EstoqueService** | Domínio / Serviço | Validar disponibilidade e realizar abatimento de saldos de estoque. | `produtoRepository` | `validarEstoque()`, `debitarEstoque()` |
+| **Pedido** | Domínio (Entidade) | Representar o pedido, mantendo a consistência do seu estado e total financeiro. | `id`, `cliente`, `itens`, `valorTotal`, `status` | `adicionarItem()`, `calcularTotal()`, `confirmar()`, `cancelar()` |
+| **ItemPedido** | Domínio (Entidade) | Representar o item e quantidade vinculados ao pedido. | `id`, `produto`, `quantidade`, `precoUnitario` | `calcularSubtotal()` |
+| **Produto** | Domínio (Entidade) | Representar o item do catálogo e controlar seu saldo em estoque. | `id`, `nome`, `preco`, `quantidadeEstoque` | `possuiEstoque()`, `debitarEstoque()` |
+| **PedidoRepository** | Infraestrutura (Contrato) | Interface para persistência e consulta de pedidos no banco de dados. | - | `salvar()`, `buscarPorId()` |
 
 ### Etapa 5 — Diagrama de Classes
 
 Represente classes, atributos, operações, visibilidade, relacionamentos, multiplicidades e dependências relevantes.
+R: ![exercicio 18_2](exercicio18_2.png)
 
 ### Etapa 6 — Arquitetura
 
 Organize as responsabilidades em **Apresentação**, **Aplicação**, **Domínio** e **Infraestrutura**. Defina classes, dependências permitidas e dependências a evitar. Explique que a divisão em camadas não impõe necessariamente dependências unidirecionais entre todas elas.
+R: 
+Apresentação (UI/Controllers): Depende exclusivamente da camada de Aplicação para enviar dados e receber respostas.
+Aplicação (Services): Orquestra os Casos de Uso. Depende das interfaces do Domínio e dos contratos de Infraestrutura.
+Domínio (Entities/Domain Services): O núcleo do sistema. Não possui dependências de nenhuma outra camada nem de frameworks técnicos.
+Infraestrutura (Repositories/Database): Implementa as interfaces definidas pelo Domínio e Aplicação.
+Nota Arquitetural: A divisão em camadas garante o isolamento das regras do negócio, permitindo flexibilidade técnica. Consultas diretas de leitura (read-only) podem acessar o repositório sem passar por serviços complexos, desde que as regras de gravação permaneçam protegidas no Domínio.
 
 ### Etapa 7 — Estrutura de diretórios
 
@@ -612,6 +916,37 @@ src/main/java/br/edu/sistema/
 ```
 
 Identifique classes, interfaces, serviços, controladores, repositórios e DTOs quando necessários.
+R:
+src/main/java/br/edu/sistema/
+├── cliente/
+│   ├── domain/
+│   │   └── Cliente.java
+│   ├── controller/
+│   │   └── ClienteController.java
+│   └── repository/
+│       └── ClienteRepository.java
+├── produto/
+│   ├── domain/
+│   │   └── Produto.java
+│   ├── service/
+│   │   └── EstoqueService.java
+│   └── repository/
+│       └── ProdutoRepository.java
+└── pedido/
+    ├── domain/
+    │   ├── Pedido.java
+    │   ├── ItemPedido.java
+    │   └── StatusPedido.java
+    ├── controller/
+    │   ├── PedidoController.java
+    │   └── dto/
+    │       ├── PedidoRequestDTO.java
+    │       └── PedidoResponseDTO.java
+    ├── service/
+    │   └── PedidoService.java
+    └── repository/
+        ├── PedidoRepository.java (Interface)
+        └── PedidoRepositoryJpaImpl.java (Infra)
 
 ### Etapa 8 — Documentação arquitetural
 
@@ -624,5 +959,18 @@ Produza documento com:
 5. Diagramas de Classes e Sequência.
 6. Rastreabilidade RN–RF–UC–classes.
 7. Regras de dependência entre módulos.
+
+R:
+Visão Geral: Sistema modular desenvolvido para gerenciar o ciclo de vendas (clientes, catálogo e pedidos), garantindo validações rigorosas de estoque e regras financeiras.
+Decisões Arquiteturais: Arquitetura em camadas organizada por funcionalidades (Package-by-Feature), promovendo alta coesão e isolamento total do modelo de domínio contra dependências de infraestrutura.
+Árvore de Diretórios Comentada: Os módulos cliente, produto e pedido contêm seus próprios subpacotes (domain, controller, service, repository), garantindo legibilidade e fácil manutenção.
+Responsabilidades das Principais Classes:
+    Pedido: Mantém a integridade e cálculo do total.
+    PedidoService: Gerencia transações e o fluxo do Caso de Uso.
+    EstoqueService: Valida e garante saldos em estoque.
+    PedidoController: Trata entradas e saídas do protocolo HTTP.
+Diagramas: Mapeados e rastreáveis nas Etapas 3 e 5.
+Rastreabilidade (RN–RF–UC–Classes):RN01 a RN05 $\rightarrow$ RF03/RF04/RF05 $\rightarrow$ UC01 $\rightarrow$ Pedido, ItemPedido, Produto, PedidoService.
+Regras de Dependência: O módulo de pedido consome dados de cliente e produto, mas as entidades de domínio jamais dependem da camada de apresentação ou de repositórios concretos.
 
 ---
