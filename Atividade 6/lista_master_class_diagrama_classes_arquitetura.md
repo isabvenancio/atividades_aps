@@ -28,10 +28,30 @@ Uma equipe produziu um Diagrama de Casos de Uso e um Diagrama de Sequência. Um 
 Responda:
 
 a) Qual é a finalidade do Diagrama de Casos de Uso?  
+R: Oferecer uma visão geral do escopo funcional e dos limites do sistema a partir da perspectiva dos atores externos
+. Ele responde a "QUEM interage com o sistema e QUAIS metas de negócio os atores desejam alcançar"
+
 b) Qual é a finalidade do Diagrama de Sequência?  
+R: Representar a dinâmica e a ordenação temporal das mensagens trocadas entre os componentes/objetos para realizar um cenário específico de um Caso de Uso
+. Ele foca no aspecto comportamental temporal (COMO e em qual ordem cronológica os participantes colaboram)
+
 c) Qual é a finalidade do Diagrama de Classes?  
+R: Apresentar a estrutura estática do software
+. Ele define as entidades permanentes (classes, seus atributos, operações e visibilidades) e como elas se relacionam estaticamente (associações, multiplicidades, agregação, composição, herança e dependências) para guiar a implementação da arquitetura
+
 d) Quais informações estruturais não são necessariamente apresentadas em um Diagrama de Sequência?  
+R: 
+- Tipagem e lista completa de atributos das entidades
+- Relacionamentos estáticos e suas multiplicidades (ex.: 1..*, 0..1)
+- Tipos de acoplamento estático (herança/generalização, composições e agregações)
+- Modificadores de visibilidade (+ público, - privado, # protegido)
+- Métodos e atributos que não participam daquela interação específica
+
 e) Explique como os três diagramas podem se complementar.
+R: 
+Casos de Uso (Visão Externa / Requisitos): Define O QUE o sistema deve fazer e delimita a fronteira do problema;
+Diagrama de Sequência (Visão Comportamental / Dinâmica): Refina os cenários do Caso de Uso, descobrindo COMO os objetos trocam mensagens ao longo do tempo para realizar cada fluxo;
+Diagrama de Classes (Visão Estrutural / Estática): Consolida os objetos descobertos na sequência em estruturas definitivas de código, mapeando atributos, assinaturas de métodos e relacionamentos permanentes que orientam a codificação;
 
 ## Exercício 2 — Identificação de classes
 
@@ -41,10 +61,23 @@ Identifique: (1) possíveis classes do domínio; (2) atributos; (3) operações;
 
 | Classe | Atributos | Operações | Responsabilidade |
 |---|---|---|---|
-| | | | |
-| | | | |
+| **Livro** | `isbn: String`<br>`titulo: String`<br>`autor: String` | `cadastrarExemplar()`<br>`obterQtdExemplares()` | Representar a obra conceitual e abstrata registrada no acervo. |
+| **Exemplar** | `codigoTombo: String`<br>`status: String` | `marcarComoEmprestado()`<br>`marcarComoDisponivel()`<br>`verificarDisponibilidade(): Boolean` | Representar a unidade física concreta do livro disponível para empréstimo. |
+| **Aluno** | `matricula: String`<br>`nome: String`<br>`statusAtivo: Boolean` | `verificarPendencias(): Boolean`<br>`podeEmprestar(): Boolean` | Representar o estudante que solicita os empréstimos e suas restrições. |
+
+R:
+- Livro 1 ──* Exemplar: Associação/Composição (1 título possui $1..N$ exemplares físicos).
+- Aluno 1 ──* Emprestimo: Associação (1 Aluno possui $0..N$ Empréstimos; cada Empréstimo pertence a $1$ Aluno).
+- Emprestimo * ── 1 Exemplar: Associação (Cada Empréstimo está associado a exatamente $1$ Exemplar).
 
 **Discussão:** todo substantivo encontrado na descrição deve necessariamente se transformar em classe? Justifique.
+
+R: 
+Não. Nem todo substantivo se torna uma classe:
+Substantivos podem ser atributos de uma classe existente (ex.: "data do empréstimo", "data prevista" e "data efetiva" são substantivos no texto, mas representam atributos da classe Emprestimo).
+Substantivos podem ser tipos/valores primitivos (ex.: "código", "nome", "matrícula").
+Substantivos podem referir-se ao próprio sistema ou atores externos.
+Uma entidade só deve ser modelada como classe se possuir identidade própria, estado (múltiplos atributos) e comportamento (operações) no domínio.
 
 ## Exercício 3 — Anatomia de uma classe UML
 
@@ -66,11 +99,31 @@ Identifique: (1) possíveis classes do domínio; (2) atributos; (3) operações;
 Responda:
 
 a) O que representam os três compartimentos?  
+R: 
+Superior: Nome da classe (Produto).
+Central: Atributos (estado/propriedades da classe).
+Inferior: Operações/Métodos (comportamentos e funções da classe).
+
 b) Qual é a diferença entre atributos e operações?  
+R:
+Atributos: Representam os dados e o estado estático armazenados pelo objeto.
+Operações: Representam os comportamentos, ações e lógica executável que a classe disponibiliza.
+
 c) O que significam `+` e `-`?  
+R:
+(Hífen): Visibilidade Privada (private). O membro é acessível apenas internamente dentro da própria classe
+(Sinal de mais): Visibilidade Pública (public). O membro é acessível por qualquer objeto externo
+
 d) O que representa o tipo após os dois-pontos?  
+R:
+Para atributos (ex.: preco: Decimal): Define o tipo de dado do campo
+Para operações (ex.: calcularSubtotal(qtd): Decimal): Define o tipo de retorno retornado pela função após a execução (ex.: Decimal, Boolean, void)
+
 e) Por que documentar operações, e não apenas atributos?  
+R: Porque as operações definem o contrato de serviço e a interface pública da classe. Em Orientação a Objetos, a comunicação ocorre por envio de mensagens (chamadas de métodos). Se documentássemos apenas atributos, a classe seria uma estrutura passiva de dados (modelo anêmico), sem regras de comportamento ou encapsulamento expressos.
+
 f) Explique a relação entre visibilidade e encapsulamento.
+R: O encapsulamento é o princípio de ocultar os detalhes internos de implementação e proteger o estado direto de um objeto. A visibilidade é o mecanismo gráfico/sintático que materializa o encapsulamento: ao definir atributos como privados (-), impede-se que terceiros alterem dados indevidamente; ao definir operações como públicas (+), expõem-se métodos seguros e validados para interação
 
 ---
 
@@ -88,8 +141,14 @@ Considere um sistema acadêmico:
 - Uma disciplina pode ser oferecida em várias turmas.
 
 Construa um Diagrama de Classes com `Professor`, `Turma`, `Estudante` e `Disciplina`, incluindo relacionamentos e multiplicidades.
+R: ![exercicio 4](exercicio4.png)
 
 Explique o significado de `1`, `0..1`, `0..*` e `1..*` e a importância das multiplicidades para a implementação.
+R: No Código: Orientam a escolha dos tipos de atributos. Relacionamentos 1 tornam-se referências diretas a objetos, enquanto 0..* ou 1..* tornam-se coleções (List, Set). No Banco de Dados: Definem a presença de chaves estrangeiras (FK) e a criação de tabelas intermediárias (para relacionamentos N..N, como entre Turma e Estudante). Nas Regras de Negócio: Guiam as validações de integridade (ex.: impedir o cadastro de uma Turma sem uma Disciplina pai vinculada).
+1: Exatamente um (obrigatório).
+0..1: Zero ou um (opcional).
+0..* (ou *): Zero ou muitos (coleção opcional).
+1..*: Um ou muitos (pelo menos um é obrigatório).
 
 ## Exercício 5 — Associação, agregação e composição
 
@@ -102,11 +161,29 @@ Explique o significado de `1`, `0..1`, `0..*` e `1..*` e a importância das mult
 Responda:
 
 a) Qual relacionamento é mais adequado em cada cenário?  
+R:
+Cenário A (Universidade e Departamento): Agregação (o--). O departamento é parte da universidade, mas possui vida própria e pode ser transferido.
+Cenário B (Pedido e ItemPedido): Composição (*--). O item depende estritamente da existência do pedido pai.
+Cenário C (Professor e Disciplina): Associação simples (--). Trata-se de um vínculo de trabalho/atribuição sem relação de todo/parte.
+
 b) Diferencie associação, agregação e composição.  
-c) O que ocorre com as partes de uma composição quando o objeto composto deixa de existir?  
+R:
+Associação: Relacionamento estrutural simples entre classes independentes que colaboram entre si (relação de uso).
+Agregação: Tipo de associação que representa uma relação "todo/parte" fraca. Os objetos partes podem existir independentemente do objeto todo.
+Composição: Tipo de associação que representa uma relação "todo/parte" forte. A parte pertence exclusivamente ao todo e compartilha o mesmo ciclo de vida.
+
+c) O que ocorre com as partes de uma composição quando o objeto composto deixa de existir? 
+R: As partes são destruídas automaticamente junto com o objeto pai, pois não possuem identidade ou utilidade autônoma fora do contexto do todo (ex.: ao cancelar um Pedido, seus Itens são excluídos).
+
 d) Por que não usar composição apenas porque uma classe referencia outra?
+R: Porque uma simples referência não implica posse exclusiva nem dependência de ciclo de vida. Usar composição indevidamente cria acoplamento rígido desnecessário, impedindo que o objeto referenciado seja compartilhado com outras partes do sistema (ex.: um Cliente é referenciado no Pedido, mas não deve ser destruído se o pedido for cancelado).
 
 Construa um pequeno Diagrama de Classes para os três cenários. Justifique com base em identidade, propriedade e ciclo de vida dos objetos.
+R: ![exercicio 5](exercicio5.png)
+
+Universidade "1" o-- "0..*" Departamento : Agregação
+Pedido "1" *-- "1..*" ItemPedido : Composição
+Professor "*" -- "*" Disciplina : Associação
 
 ## Exercício 6 — Herança e generalização
 
@@ -114,12 +191,35 @@ Considere `Pagamento`, `PagamentoPix`, `PagamentoCartao` e `PagamentoBoleto`. To
 
 Responda:
 
-a) Quais atributos pertencem à superclasse?  
+a) Quais atributos pertencem à superclasse (Pagamento)?  
+R: 
+id: Long
+valor: Decimal
+data: Date
+situacao: String
+
 b) Quais comportamentos podem ser compartilhados?  
+R:
+processarPagamento()
+cancelarPagamento()
+consultarStatus()
+
 c) Quais são específicos?  
+R:
+PagamentoPix: Atributos chavePix, qrCode | Comportamento gerarQrCode().
+PagamentoCartao: Atributos numeroCartao, bandeira, parcelas | Comportamento autorizarOperadora().
+PagamentoBoleto: Atributos codigoBarras, dataVencimento | Comportamento gerarLinhaDigitavel().
+
 d) Construa o diagrama com generalização.  
+R: ![exercicio 6](exercicio6.png)
+
 e) Diferencie herança e composição.  
+R: 
+Herança (Relação "É UM"): Cria uma hierarquia estática em tempo de compilação onde a subclasse herda a estrutura da superclasse.
+Composição (Relação "TEM UM"): Cria uma relação dinâmica onde uma classe inclui instâncias de outra para delegar comportamentos, sendo mais flexível.
+
 f) Quando a herança pode prejudicar a evolução?
+R: A herança prejudica a evolução quando é aplicada indevidamente apenas para reaproveitamento de código sem que exista uma relação conceitual de especialização (problema da classe base frágil). Nesses casos, qualquer mudança na superclasse pode impactar ou quebrar involuntariamente o comportamento de diversas subclasses cascata abaixo.
 
 ---
 
@@ -147,10 +247,23 @@ public class PedidoService {
 Responda:
 
 a) Qual é a responsabilidade de `Pedido`?  
+R: Na estrutura apresentada, a classe Pedido atua apenas como uma estrutura passiva de dados (Modelo Anêmico). Sua única responsabilidade é armazenar valores e expô-los via getters e setters, sem conter qualquer regra de negócio.
+
 b) Qual é a de `PedidoService`?  
+R: PedidoService assume toda a lógica de negócio e manipulação do estado de Pedido. Ela decide como calcular totais, validar regras e alterar o status do pedido.
+
 c) Quais operações podem ser comportamentos próprios do domínio `Pedido`?  
+R: 
+calcularTotal(): double
+cancelar(): void
+aplicarDesconto(double percentual): void
+
 d) Por que concentrar todas as regras em uma única `Service` pode ser problemático?  
+R: Violação do Encapsulamento: Expõe os atributos internos da entidade via setters públicos, permitindo alterações indevidas por qualquer parte do sistema. Baixa Coesão no Service: A classe Service tende a crescer descontroladamente (God Class), acumulando responsabilidades heterogêneas. Violacão do Padrão GRASP Especialista na Informação (Information Expert): A entidade que possui os dados (Pedido) não é a mesma que executa a lógica sobre eles.
+
 e) Proponha uma distribuição de responsabilidades e represente-a em UML.
+R: Entidade Pedido (Domínio): Responsável por manter a consistência de seu próprio estado (calcularTotal(), aplicarDesconto(), cancelar()) e PedidoService (Serviço de Aplicação): Responsável por orquestrar o caso de uso (buscar o pedido no repositório, invocar os métodos do domínio e salvar o resultado).
+![exercicio7](exercicio7.png)
 
 **Importante:** nem toda regra precisa estar em uma entidade; considere serviços de domínio e de aplicação quando apropriado.
 
@@ -170,11 +283,31 @@ SistemaManager
 Responda:
 
 a) Qual problema de projeto a classe apresenta?  
+R: A classe é uma "God Class" (Classe Deus). Ela acumula múltiplas responsabilidades não correlacionadas, violando o Princípio da Responsabilidade Única (SRP) do SOLID.
+
 b) Explique coesão.  
+R: Coesão é o grau de afinidade entre os atributos e métodos de uma mesma classe. Alta coesão indica que a classe tem um propósito único, claro e bem delimitado.
+
 c) Explique acoplamento.  
+R: Acoplamento é o nível de dependência entre classes distintas. Baixo acoplamento significa que alterações em uma classe causam pouco ou nenhum impacto nas demais.
+
 d) Como responsabilidades mal distribuídas afetam manutenção e testes?  
+R:
+Manutenção: Torna o código frágil e propenso a regressões; alterar uma regra de frete pode acidentalmente quebrar o envio de e-mails.
+Testes: Torna os testes unitários extremamente complexos, pois exige a criação de mocks pesados para dependências não relacionadas ao teste em questão.
+
 e) Reorganize as operações em classes específicas.  
+R:
+ClienteService: cadastrarCliente()
+ProdutoService: atualizarProduto()
+FreteService: calcularFrete()
+PagamentoService: registrarPagamento()
+RelatorioService: emitirRelatorio()
+AutenticacaoService: autenticarUsuario()
+EmailService: enviarEmail()
+
 f) Construa um Diagrama de Classes da nova organização.
+R: ![exercicio 8](exercicio8.png)
 
 ## Exercício 9 — Da sequência para as classes
 
@@ -187,11 +320,31 @@ O sistema deve registrar pedidos.
 Responda:
 
 a) Quais participantes poderiam virar classes concretas?  
-b) Quais responsabilidades pertencem à interface, aplicação, domínio ou infraestrutura?  
+R: TelaPedido, PedidoController, PedidoService e PedidoRepository, além das entidades de domínio associadas, como Pedido e ItemPedido.
+
+b) Quais responsabilidades pertencem à interface, aplicação, domínio ou infraestrutura?
+R: 
+Interface (UI / Boundary): TelaPedido — Interação gráfica e captura de dados do usuário.
+Aplicação (Controller): PedidoController — Recebimento da requisição HTTP/UI e delegação para a camada de negócio.
+Domínio (Service / Entity): PedidoService e Pedido — Execução e validação das regras de negócio do sistema.
+Infraestrutura (Repository): PedidoRepository — Persistência e comunicação direta com o banco de dados.
+
 c) Quais operações podem ser identificadas a partir das mensagens?  
+R: 
+TelaPedido: solicitarCriacaoPedido(), exibirConfirmacao()
+PedidoController: registrarPedido(dto)
+PedidoService: processarPedido(pedido), validarEstoque()
+PedidoRepository: salvar(pedido), buscarPorId(id)
+
 d) O Diagrama de Sequência permite descobrir atributos? Explique.  
+R: 
+Sim. Ao analisar as mensagens trocadas, os parâmetros enviados (ex.: codigoProduto, quantidade, cpfCliente) e os retornos obtidos revelam os dados necessários para compor os atributos das classes envolvidas.
+
 e) Construa um Diagrama de Classes para o cenário.  
+R: ![exercicio 9](exercicio9.png)
+
 f) Por que nem todo participante da sequência aparece no Diagrama de Classes de domínio?
+R: Porque o Diagrama de Classes de Domínio representa estritamente os conceitos e regras de negócio permanentes da organização (Pedido, Cliente, Produto). Participantes como telas (TelaPedido), controladores (PedidoController) e repositórios (PedidoRepository) pertencem às camadas técnicas de Apresentação, Aplicação e Infraestrutura, figurando apenas no Diagrama de Classes de Projeto/Arquitetura.
 
 ---
 
