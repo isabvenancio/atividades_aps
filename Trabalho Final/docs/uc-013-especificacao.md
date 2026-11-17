@@ -158,10 +158,10 @@ Regras do contrato:
 
 ## 6. Arquitetura
 
-Mesma organização do UC-001: módulo por funcionalidade, camadas dentro dele.
+Organização por funcionalidade, com camadas dentro do módulo. A estrutura base (backend, frontend e CI) vem da T00.
 
 ```
-trabalho-final/
+Trabalho Final/
 ├── backend/src/
 │   ├── compartilhado/auth/   # middleware autenticar (sessão provisória)            → P05
 │   ├── pedidos/
