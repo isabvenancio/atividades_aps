@@ -185,4 +185,18 @@ describe('PedidoService.criarRascunho', () => {
 
     expect(Object.keys(resposta)).not.toContain('contaId');
   });
+
+  test('sem gerarId e agora injetados, usa UUID e a data atual', async () => {
+    const padrao = new PedidoService({
+      pedidoRepository: pedidos,
+      categoriaRepository: categorias,
+      destinatarioRepository: destinatarios,
+    });
+    const antes = Date.now();
+
+    const resposta = await padrao.criarRascunho(CONTA, { titulo: 'T' });
+
+    expect(resposta.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+    expect(Date.parse(resposta.criadoEm)).toBeGreaterThanOrEqual(antes);
+  });
 });
