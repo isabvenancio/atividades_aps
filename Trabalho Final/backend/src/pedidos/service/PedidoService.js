@@ -37,13 +37,14 @@ class PedidoService {
     if (problemas.length > 0) throw new DadosInvalidosError(problemas); // A5
 
     const valores = normalizar(dados);
+    const categoria = await this.#resolverCategoria(valores.categoriaId);
 
     const pedido = Pedido.novoRascunho({
       id: this.gerarId(),
       contaId,
       titulo: valores.titulo,
       situacao: valores.situacao,
-      categoria: null,
+      categoria,
       contexto: valores.contexto,
       destinatario: null,
       criadoEm: this.agora(),
@@ -56,6 +57,18 @@ class PedidoService {
     }
 
     return pedido.paraResposta();
+  }
+
+  async #resolverCategoria(categoriaId) {
+    if (!categoriaId) return null;
+
+    const categoria = await this.categoriaRepository.buscarAtivaPorId(categoriaId);
+    if (!categoria) {
+      throw new DadosInvalidosError([
+        { campo: 'categoriaId', mensagem: 'Escolha uma categoria ativa.' },
+      ]);
+    }
+    return categoria;
   }
 }
 
