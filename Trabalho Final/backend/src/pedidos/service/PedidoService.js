@@ -4,6 +4,7 @@ const { validar, normalizar } = require('../domain/PedidoPolicy');
 const {
   DadosInvalidosError,
   SessaoInvalidaError,
+  DestinatarioNaoEncontradoError,
   FalhaAoSalvarError,
 } = require('../domain/erros');
 
@@ -38,6 +39,7 @@ class PedidoService {
 
     const valores = normalizar(dados);
     const categoria = await this.#resolverCategoria(valores.categoriaId);
+    const destinatario = await this.#resolverDestinatario(contaId, valores);
 
     const pedido = Pedido.novoRascunho({
       id: this.gerarId(),
@@ -46,7 +48,7 @@ class PedidoService {
       situacao: valores.situacao,
       categoria,
       contexto: valores.contexto,
-      destinatario: null,
+      destinatario,
       criadoEm: this.agora(),
     });
 
@@ -69,6 +71,31 @@ class PedidoService {
       ]);
     }
     return categoria;
+  }
+
+  async #resolverDestinatario(contaId, valores) {
+    // A2: cadastrado. Busca somente na coleção da conta (RN-003) e copia os dados do momento.
+    if (valores.destinatarioId) {
+      const cadastrado = await this.destinatarioRepository.buscarDaConta(
+        contaId,
+        valores.destinatarioId,
+      );
+      if (!cadastrado) throw new DestinatarioNaoEncontradoError(); // E1
+
+      return {
+        nome: cadastrado.nome,
+        tipo: cadastrado.tipo,
+        proximidade: cadastrado.proximidade,
+        origem: 'cadastrado',
+      };
+    }
+
+    // A3: direto. Usa os dados no pedido, sem criar registro na coleção de destinatários.
+    if (valores.destinatario) {
+      return { ...valores.destinatario, origem: 'direto' };
+    }
+
+    return null; // A1
   }
 }
 
