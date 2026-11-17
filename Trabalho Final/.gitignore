@@ -1,0 +1,17 @@
+# dependências e builds
+node_modules/
+dist/
+coverage/
+
+# segredos e dados locais
+.env
+.env.*
+!.env.example
+*.db
+*.sqlite
+
+# editor e sistema
+.vscode/
+.idea/
+.DS_Store
+*.log
