@@ -182,3 +182,7 @@ Dependências: `controller → service → domain` e `service → repository`. O
 ## 7. Diagrama de sequência
 
 Fonte oficial: `Atividade 4/Diagramas Sequencias/UC-013.svg`.
+
+## 8. Diagrama de classes
+
+[`diagrama-classes-uc-013.md`](diagrama-classes-uc-013.md): domínio, camadas do back-end e componentes do front-end, com rastreabilidade para as linhas de vida do diagrama de sequência e para as tasks.
