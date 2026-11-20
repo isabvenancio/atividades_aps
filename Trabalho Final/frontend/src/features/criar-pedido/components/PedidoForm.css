@@ -1,0 +1,28 @@
+.pedido-form {
+  display: grid;
+  gap: 1rem;
+  max-width: 38rem;
+}
+
+.pedido-form__campo {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.pedido-form__campo :is(input, textarea, select) {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5rem;
+  font: inherit;
+}
+
+.pedido-form__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.pedido-form button {
+  padding: 0.5rem 0.85rem;
+  font: inherit;
+}
