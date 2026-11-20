@@ -9,6 +9,7 @@ Requer Node 20 ou superior. A partir da raiz do repositório:
 ```bash
 cd "Trabalho Final/backend"
 npm install
+npm run seed     # prepara o SQLite com dados de desenvolvimento
 npm run dev      # API em http://localhost:3000
 npm test         # Jest + Supertest
 npm run lint     # ESLint
@@ -29,13 +30,11 @@ backend/
 
 `app.js` exporta `criarApp()` para os testes subirem a API sem abrir porta.
 
-## Dependências que entram nas tasks
+## Dados de desenvolvimento
 
-Cada task instala o que precisa, para o `package.json` mostrar quem trouxe o quê:
+O backend usa SQLite com `better-sqlite3`. Por padrão, o arquivo fica em `backend/vazaapp.sqlite`. Defina `SQLITE_PATH` para usar outro arquivo ou passe `:memory:` a `abrirBanco` nos testes.
 
-| Pacote | Task |
-|---|---|
-| `better-sqlite3` | P04 |
+`npm run seed` prepara duas categorias ativas, Trabalho e Família, e uma arquivada. A conta de desenvolvimento `conta-dev` tem a destinatária Rita (`dest-rita`). A segunda conta, `conta-outra`, tem Caio (`dest-caio`). A carga pode ser repetida e preserva os dados já gravados.
 
 ## Contrato da API
 
