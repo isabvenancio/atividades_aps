@@ -1,7 +1,8 @@
 class PedidoController {
-  constructor({ pedidoService, categoriaRepository }) {
+  constructor({ pedidoService, categoriaRepository, destinatarioRepository }) {
     this.pedidoService = pedidoService;
     this.categoriaRepository = categoriaRepository;
+    this.destinatarioRepository = destinatarioRepository;
   }
 
   async criar(req, res) {
@@ -11,6 +12,11 @@ class PedidoController {
 
   listarCategorias(req, res) {
     res.json(this.categoriaRepository.listarAtivas());
+  }
+
+  listarDestinatarios(req, res) {
+    const destinatarios = this.destinatarioRepository.listarDaConta(req.contaId);
+    res.set('Cache-Control', 'private, no-store').json(destinatarios);
   }
 }
 
