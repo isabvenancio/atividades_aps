@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { lerRascunho } from '../rascunho.js';
+import { lerRascunho, validarRascunho } from '../rascunho.js';
 import CampoPedido from './CampoPedido.jsx';
 import SeletorDestinatario from './SeletorDestinatario.jsx';
 import './PedidoForm.css';
@@ -13,22 +13,50 @@ export default function PedidoForm({
   categorias = [], destinatarios = [], erros, carregando = false, onSubmit, onCancel,
 }) {
   const [modo, setModo] = useState('nenhum');
-  const mensagens = errosPorCampo(erros);
+  const [errosLocais, setErrosLocais] = useState({});
+  const [errosCancelados, setErrosCancelados] = useState(null);
+  const externos = erros === errosCancelados ? {} : errosPorCampo(erros);
+  const mensagens = { ...externos, ...errosLocais };
 
   function salvar(evento) {
     evento.preventDefault();
     if (carregando) return;
-    onSubmit(lerRascunho(new FormData(evento.currentTarget)));
+    const form = evento.currentTarget;
+    const dados = lerRascunho(new FormData(form));
+    const problemas = validarRascunho(dados);
+    setErrosLocais(problemas);
+    const [primeiroCampo] = Object.keys(problemas);
+    if (primeiroCampo) {
+      form.elements.namedItem(primeiroCampo).focus();
+      return;
+    }
+    setErrosCancelados(null);
+    onSubmit(dados);
+  }
+
+  function editar(evento) {
+    const { name, value } = evento.target;
+    if (!Object.keys(errosLocais).length) return;
+    if (name === 'modoDestinatario') {
+      setErrosLocais(Object.fromEntries(Object.entries(errosLocais).filter(([campo]) => !campo.startsWith('destinatario'))));
+    } else if (errosLocais[name] && value.trim()) {
+      const restantes = { ...errosLocais };
+      delete restantes[name];
+      setErrosLocais(restantes);
+    }
   }
 
   function cancelar(evento) {
     evento.currentTarget.form.reset();
+    setModo('nenhum');
+    setErrosLocais({});
+    setErrosCancelados(erros);
     onCancel();
   }
 
   return (
     <form className="pedido-form" aria-label="Criar pedido de desculpa" aria-busy={carregando}
-      onSubmit={salvar} onReset={() => setModo('nenhum')}>
+      noValidate onSubmit={salvar} onChange={editar}>
       <p>Para salvar um rascunho, só o título é obrigatório.</p>
       <fieldset className="pedido-form__campos" disabled={carregando}>
         <CampoPedido name="titulo" rotulo="Título" erro={mensagens.titulo} required maxLength={100} />

@@ -17,3 +17,16 @@ export function lerRascunho(campos) {
   }
   return dados;
 }
+
+export function validarRascunho(dados) {
+  const erros = {};
+  if (!dados.titulo) erros.titulo = 'Informe um título para o pedido.';
+  if (dados.destinatarioId === '') erros.destinatarioId = 'Selecione um destinatário cadastrado.';
+  if (dados.destinatario) {
+    const { nome, tipo, proximidade } = dados.destinatario;
+    if (!nome) erros['destinatario.nome'] = 'Informe o nome do destinatário.';
+    if (!tipo) erros['destinatario.tipo'] = 'Escolha o tipo de destinatário.';
+    if (!proximidade) erros['destinatario.proximidade'] = 'Escolha a proximidade com o destinatário.';
+  }
+  return erros;
+}
