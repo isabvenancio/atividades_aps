@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
+    "seed": "node src/pedidos/repository/seed.js",
     "test": "jest",
     "lint": "eslint ."
   },
@@ -17,6 +18,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
+    "better-sqlite3": "12.11.1",
     "express": "^4.21.2"
   },
   "devDependencies": {
