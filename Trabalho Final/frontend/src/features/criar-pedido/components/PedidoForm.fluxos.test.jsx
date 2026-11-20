@@ -75,3 +75,69 @@ test('voltar ao modo Nenhum descarta a escolha anterior', async () => {
 
   expect(onSubmit.mock.calls).toEqual([[{ titulo: 'Atraso' }]]);
 });
+
+test.each(['', '   '])('A5: bloqueia título vazio (%j) e preserva os dados para corrigir', async (titulo) => {
+  const { user, onSubmit } = abrirFormulario();
+  if (titulo) await user.type(campo('Título'), titulo);
+  await user.type(campo('Situação'), 'Perdi o horário.');
+  await user.selectOptions(campo('Categoria'), 'Trabalho');
+  await salvar(user);
+
+  expect(onSubmit).not.toHaveBeenCalled();
+  expect(campo('Título')).toHaveFocus();
+  expect(campo('Título')).toHaveAttribute('aria-invalid', 'true');
+  expect(campo('Título')).toHaveAccessibleDescription('Informe um título para o pedido.');
+  expect(campo('Situação')).toHaveValue('Perdi o horário.');
+  expect(campo('Categoria')).toHaveValue('cat-trabalho');
+
+  await user.type(campo('Título'), 'Meu atraso');
+  await salvar(user);
+  expect(onSubmit.mock.calls).toEqual([[{ titulo: 'Meu atraso', situacao: 'Perdi o horário.', categoriaId: 'cat-trabalho' }]]);
+});
+
+test('aponta o primeiro dado ausente no modo direto e exige uma escolha no modo cadastrado', async () => {
+  const { user, onSubmit } = abrirFormulario();
+  await user.type(campo('Título'), 'Uma conversa');
+  await user.selectOptions(campo('Destinatário'), 'Informar direto');
+  await user.type(campo('Nome'), '   ');
+  await salvar(user);
+
+  expect(campo('Nome')).toHaveFocus();
+  expect(campo('Nome')).toHaveAccessibleDescription('Informe o nome do destinatário.');
+  expect(campo('Tipo')).toHaveAttribute('aria-invalid', 'true');
+  expect(campo('Proximidade')).toHaveAttribute('aria-invalid', 'true');
+  expect(onSubmit).not.toHaveBeenCalled();
+
+  await user.selectOptions(campo('Destinatário'), 'Escolher cadastrado');
+  await salvar(user);
+  expect(campo('Destinatário cadastrado')).toHaveFocus();
+  expect(campo('Destinatário cadastrado')).toHaveAccessibleDescription('Selecione um destinatário cadastrado.');
+  expect(onSubmit).not.toHaveBeenCalled();
+});
+
+test('A6: cancelar descarta os campos, o destinatário e os erros sem enviar', async () => {
+  const { user, onSubmit, onCancel } = abrirFormulario({ erros: { contexto: 'Revise o contexto.' } });
+  await user.type(campo('Título'), 'Rascunho que vou descartar');
+  await user.type(campo('Situação'), 'Fiquei de ligar.');
+  await user.selectOptions(campo('Categoria'), 'Trabalho');
+  await user.type(campo('Contexto'), 'Combinamos ontem.');
+  await user.selectOptions(campo('Destinatário'), 'Informar direto');
+  await user.type(campo('Nome'), 'Rita');
+  await user.selectOptions(campo('Tipo'), 'Colega');
+  await salvar(user);
+  expect(campo('Proximidade')).toHaveAccessibleDescription('Escolha a proximidade com o destinatário.');
+  expect(campo('Contexto')).toHaveAccessibleDescription('Revise o contexto.');
+  await user.click(screen.getByRole('button', { name: 'Cancelar' }));
+
+  expect(onCancel).toHaveBeenCalledOnce();
+  expect(onSubmit).not.toHaveBeenCalled();
+  for (const rotulo of ['Título', 'Situação', 'Categoria', 'Contexto']) {
+    expect(campo(rotulo)).toHaveValue('');
+  }
+  expect(campo('Destinatário')).toHaveValue('nenhum');
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  await user.selectOptions(campo('Destinatário'), 'Informar direto');
+  for (const rotulo of ['Nome', 'Tipo', 'Proximidade']) {
+    expect(campo(rotulo)).toHaveValue('');
+  }
+});
