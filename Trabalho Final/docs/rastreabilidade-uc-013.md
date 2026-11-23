@@ -1,6 +1,6 @@
 # UC-013 — Rastreabilidade
 
-Liga os requisitos e cenários do UC-013 aos testes automatizados, às tasks, ao Jira e aos PRs. Situação em 23/11/2026: P01 a P09, D01 e D02 integradas; B01 e B02 em PR; P10 a P12 ainda não feitas.
+Liga os requisitos e cenários do UC-013 aos testes automatizados, às tasks, ao Jira e aos PRs. Situação em 23/11/2026: P01 a P09, D01, D02, B01 e B02 integradas; P13 em andamento; P10 a P12 ainda não feitas.
 
 Este conteúdo preenche os campos "Tarefas relacionadas" e "Casos de teste relacionados" do UC-013, que estavam "A definir" no documento de casos de uso.
 
@@ -47,11 +47,11 @@ Os testes de integração da API (P12) e da página (P11) vão completar as linh
 | P09 Testes do formulário | CSC-30 | [#15](https://github.com/isabvenancio/atividades_aps/pull/15) | Feito |
 | D01 Diagrama de classes | CSC-33 | — (direto na branch de feature) | Feito |
 | D02 Layout e página inicial | CSC-34 | [#17](https://github.com/isabvenancio/atividades_aps/pull/17) | Feito |
-| B01 Erro 500 sem registro | CSC-35 | branch `isabella/B01-log-erro-500` | Em análise |
-| B02 Erros do servidor no formulário | CSC-36 | branch `isabella/B02-erros-servidor-formulario` | Em análise |
+| B01 Erro 500 sem registro | CSC-35 | [#18](https://github.com/isabvenancio/atividades_aps/pull/18) | Feito |
+| B02 Erros do servidor no formulário | CSC-36 | [#19](https://github.com/isabvenancio/atividades_aps/pull/19) | Feito |
 | P10 Cliente da API | CSC-31 | — | A fazer |
 | P11 Página de criação | CSC-26 | — | A fazer |
 | P12 Testes de integração | CSC-32 | — | A fazer |
-| P13 Documentação e PR final | CSC-5 | — | Fazendo |
+| P13 Documentação e PR final | CSC-5 | [#20](https://github.com/isabvenancio/atividades_aps/pull/20) (parte 1) | Fazendo |
 
 Atualizar esta tabela e a do painel do plano quando cada PR for integrado.

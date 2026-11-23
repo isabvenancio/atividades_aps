@@ -222,13 +222,14 @@ Colunas: **A fazer → Fazendo → Em análise → Feito**.
 | P12 | Gabriela | `gabriela/P12-testes-integracao-api` | CSC-32 | Carolina | — | A fazer |
 | D01 | Isabella | — (direto na `feature/uc-013-criar-pedido-desculpa`) | CSC-33 | — | — | Feito |
 | D02 | Isabella | `isabella/D02-layout-base` | CSC-34 | Gabriela | [#17](https://github.com/isabvenancio/atividades_aps/pull/17) | Feito |
-| B01 | Isabella | `isabella/B01-log-erro-500` | CSC-35 | Carolina | | Em análise |
-| B02 | Isabella | `isabella/B02-erros-servidor-formulario` | CSC-36 | Matheus | | Em análise |
-| P13 | Isabella | `isabella/P13-documentacao-final` | CSC-5 | Matheus | | Fazendo |
+| B01 | Isabella | `isabella/B01-log-erro-500` | CSC-35 | Carolina | [#18](https://github.com/isabvenancio/atividades_aps/pull/18) | Feito |
+| B02 | Isabella | `isabella/B02-erros-servidor-formulario` | CSC-36 | Matheus | [#19](https://github.com/isabvenancio/atividades_aps/pull/19) | Feito |
+| P13 | Isabella | `isabella/P13-documentacao-final` | CSC-5 | Matheus | [#20](https://github.com/isabvenancio/atividades_aps/pull/20) (parte 1) | Fazendo |
 
 O status é o do Jira em 23/11/2026.
 
 **Diferenças em relação à seção 1:**
 - Os PRs da T00 à P03 (#5 a #8) foram integrados direto na `main`, e não na branch de feature. A branch de feature foi atualizada com a `main` em seguida, por isso tem o mesmo conteúdo.
 - A branch de feature já foi levada para a `main` antes do PR final, nos PRs [#9](https://github.com/isabvenancio/atividades_aps/pull/9) (19/11, até o diagrama de classes) e [#16](https://github.com/isabvenancio/atividades_aps/pull/16) (23/11, até a P09).
+- Os PRs [#18](https://github.com/isabvenancio/atividades_aps/pull/18) (B01), [#19](https://github.com/isabvenancio/atividades_aps/pull/19) (B02) e [#20](https://github.com/isabvenancio/atividades_aps/pull/20) (P13, parte 1) também foram integrados direto na `main` (23/11). Como essas branches saíram da branch de feature, a `main` ficou com tudo, e a branch de feature foi atualizada com a `main` em seguida.
 - Os PRs [#1](https://github.com/isabvenancio/atividades_aps/pull/1) e [#2](https://github.com/isabvenancio/atividades_aps/pull/2) (16/11) integraram a P01 na `main` antes do fluxo atual e foram desfeitos no [#3](https://github.com/isabvenancio/atividades_aps/pull/3) (17/11). Em seguida, o [#4](https://github.com/isabvenancio/atividades_aps/pull/4) levou para a `main` o plano, a especificação, o template de PR e o script de branches.
