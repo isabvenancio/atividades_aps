@@ -1,14 +1,37 @@
 const express = require('express');
+const { autenticar } = require('./compartilhado/auth/autenticar');
+const { abrirBanco } = require('./pedidos/repository/banco');
+const {
+  PedidoRepositorySqlite,
+  CategoriaRepositorySqlite,
+  DestinatarioRepositorySqlite,
+} = require('./pedidos/repository/repositorios');
+const { PedidoService } = require('./pedidos/service/PedidoService');
+const { PedidoController } = require('./pedidos/controller/PedidoController');
+const { tratarErro } = require('./pedidos/controller/tratarErro');
 
-function criarApp() {
+function criarApp({ banco = abrirBanco() } = {}) {
   const app = express();
-  app.use(express.json());
+  app.locals.banco = banco;
+  const categoriaRepository = new CategoriaRepositorySqlite(banco);
+  const destinatarioRepository = new DestinatarioRepositorySqlite(banco);
+  const pedidoService = new PedidoService({
+    pedidoRepository: new PedidoRepositorySqlite(banco),
+    categoriaRepository,
+    destinatarioRepository,
+  });
+  const controller = new PedidoController({ pedidoService, categoriaRepository, destinatarioRepository });
 
   app.get('/api/saude', (req, res) => {
     res.json({ status: 'ok' });
   });
 
-  // As rotas do módulo de pedidos (UC-013) entram aqui nas tasks P05 e P06.
+  app.post('/api/pedidos', autenticar, express.json(), (req, res, next) => {
+    controller.criar(req, res).catch(next);
+  });
+  app.get('/api/categorias', autenticar, (req, res) => controller.listarCategorias(req, res));
+  app.get('/api/destinatarios', autenticar, (req, res) => controller.listarDestinatarios(req, res));
+  app.use(tratarErro);
 
   return app;
 }
