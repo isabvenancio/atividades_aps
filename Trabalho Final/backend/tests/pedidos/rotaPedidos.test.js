@@ -12,7 +12,10 @@ beforeEach(() => {
   app = criarApp({ banco });
 });
 
-afterEach(() => banco.close());
+afterEach(() => {
+  jest.restoreAllMocks();
+  banco.close();
+});
 
 function postar() {
   return request(app).post('/api/pedidos').set('Authorization', 'Bearer dev:conta-dev');
@@ -54,6 +57,7 @@ test.each(['dest-caio', 'inexistente'])('404 tem a mesma resposta para %s', asyn
 });
 
 test('500 em uma falha de escrita não confirma o pedido nem expõe detalhes do banco', async () => {
+  jest.spyOn(console, 'error').mockImplementation(() => {}); // silencia o registro esperado do B01
   banco.pragma('query_only = ON');
   const resposta = await postar().send({ titulo: 'Reunião' });
   expect(resposta.status).toBe(500);
@@ -61,4 +65,19 @@ test('500 em uma falha de escrita não confirma o pedido nem expõe detalhes do 
     erro: 'FALHA_AO_SALVAR', mensagem: 'Não foi possível salvar o pedido. Tente novamente.',
   });
   expect(banco.prepare('SELECT COUNT(*) FROM pedidos').pluck().get()).toBe(0);
+});
+
+test('500 registra o erro no servidor com o método e a rota (B01)', async () => {
+  const registro = jest.spyOn(console, 'error').mockImplementation(() => {});
+  banco.pragma('query_only = ON');
+  await postar().send({ titulo: 'Reunião' });
+  expect(registro).toHaveBeenCalledWith('[POST /api/pedidos] Erro não tratado:', expect.objectContaining({ message: expect.any(String) }));
+});
+
+test('respostas 400, 401 e 404 não poluem o registro do servidor', async () => {
+  const registro = jest.spyOn(console, 'error').mockImplementation(() => {});
+  await postar().send({ titulo: ' ' });
+  await request(app).post('/api/pedidos').send({ titulo: 'Reunião' });
+  await postar().send({ titulo: 'Reunião', destinatarioId: 'dest-caio' });
+  expect(registro).not.toHaveBeenCalled();
 });

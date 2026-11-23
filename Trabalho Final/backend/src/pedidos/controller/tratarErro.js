@@ -23,6 +23,9 @@ function tratarErro(erro, req, res, next) {
       campos: erro.campos,
     });
   }
+  // Falha inesperada (E2): registra para a equipe investigar, mas não expõe detalhes na resposta.
+  console.error(`[${req.method} ${req.originalUrl}] Erro não tratado:`, erro);
+
   if (req.method === 'GET') {
     return res.status(500).json({
       erro: 'FALHA_AO_CONSULTAR',
