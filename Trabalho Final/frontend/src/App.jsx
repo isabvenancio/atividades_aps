@@ -1,8 +1,10 @@
+import Layout from './compartilhado/layout/Layout.jsx';
+import PaginaInicial from './features/inicio/pages/PaginaInicial.jsx';
+
 export default function App() {
   return (
-    <main>
-      <h1>VazaApp</h1>
-      <p>Sugestões de desculpas personalizadas.</p>
-    </main>
+    <Layout>
+      <PaginaInicial />
+    </Layout>
   );
 }

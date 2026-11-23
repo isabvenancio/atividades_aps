@@ -1,6 +1,6 @@
 # UC-013 — Criar pedido de desculpa (especificação para implementação)
 
-> Resumo operacional do UC-013 de `Atividade 26 de Agosto/casos_de_uso.pdf`, com rastreabilidade em RF-013, RN-003, RN-007 e RN-008. O documento original continua sendo a fonte oficial. Este arquivo existe para o front e o back trabalharem em paralelo sobre o mesmo contrato.
+> Resumo operacional do UC-013 de `Atividades/Atividade 26 de Agosto/casos_de_uso.pdf`, com rastreabilidade em RF-013, RN-003, RN-007 e RN-008. O documento original continua sendo a fonte oficial. Este arquivo existe para o front e o back trabalharem em paralelo sobre o mesmo contrato.
 
 ## 1. Resumo
 
@@ -131,6 +131,8 @@ Com destinatário e categoria, `destinatario` vem como `{ "nome": "Rita", "tipo"
 }
 ```
 
+Quando o corpo não é um JSON válido ou passa do limite de tamanho, a resposta é a mesma, com `campos: [{ "campo": "corpo", "mensagem": "Envie um objeto JSON válido dentro do limite de tamanho." }]`.
+
 **404 Not Found** — E1 (destinatário de outra conta ou inexistente, sem diferenciar)
 
 ```json
@@ -149,7 +151,13 @@ Com destinatário e categoria, `destinatario` vem como `{ "nome": "Rita", "tipo"
 
 ### `GET /api/destinatarios` — apoio ao formulário
 
-`200` → `[{ "id": "dest-rita", "nome": "Rita", "tipo": "colega", "proximidade": "media" }]`. Retorna **apenas os da conta da sessão**.
+`200` → `[{ "id": "dest-rita", "nome": "Rita", "tipo": "colega", "proximidade": "media" }]`. Retorna **apenas os da conta da sessão**, com `Cache-Control: private, no-store`, porque são dados pessoais.
+
+**Erros das rotas de apoio:** 401 `SESSAO_INVALIDA` sem sessão, como nas outras rotas. Se a consulta falhar:
+
+```json
+500 { "erro": "FALHA_AO_CONSULTAR", "mensagem": "Não foi possível carregar os dados. Tente novamente." }
+```
 
 Regras do contrato:
 - Mensagens em português, sem código interno nem stack trace (RNF-003).
@@ -163,26 +171,30 @@ Organização por funcionalidade, com camadas dentro do módulo. A estrutura bas
 ```
 Trabalho Final/
 ├── backend/src/
-│   ├── compartilhado/auth/   # middleware autenticar (sessão provisória)            → P05
+│   ├── app.js                # criarApp(): monta repositórios, serviço e rotas       → P05, P06
+│   ├── compartilhado/auth/   # autenticar.js (sessão provisória)                    → P05
 │   ├── pedidos/
-│   │   ├── domain/           # Pedido, PedidoPolicy                                 → P01
+│   │   ├── domain/           # Pedido, PedidoPolicy, constantes, erros              → P01
 │   │   ├── service/          # PedidoService.criarRascunho                          → P02, P03
-│   │   ├── repository/       # PedidoRepository, DestinatarioRepository,
-│   │   │                     # CategoriaRepository (SQLite) + seed                  → P04
-│   │   └── controller/       # POST /api/pedidos, GET /api/categorias,
-│   │                         # GET /api/destinatarios                               → P05, P06, P12
+│   │   ├── repository/       # banco.js (tabelas), repositorios.js
+│   │   │                     # (PedidoRepositorySqlite, CategoriaRepositorySqlite,
+│   │   │                     # DestinatarioRepositorySqlite), seed.js               → P04
+│   │   └── controller/       # PedidoController (POST /api/pedidos,
+│   │                         # GET /api/categorias, GET /api/destinatarios),
+│   │                         # tratarErro                                           → P05, P06, P12
 └── frontend/src/features/criar-pedido/
-    ├── components/           # PedidoForm, SeletorDestinatario                      → P07, P08, P09
+    ├── rascunho.js           # lerRascunho, validarRascunho                         → P08
+    ├── components/           # PedidoForm, CampoPedido, SeletorDestinatario         → P07, P08, P09
     ├── api/                  # pedidoApi.js, useCriarPedido                         → P10
     └── pages/                # CriarPedidoPage, RascunhoSalvo                       → P11
 ```
 
-Dependências: `controller → service → domain` e `service → repository`. O domínio não importa Express nem SQLite.
+Dependências: `controller → service → domain` e `service → repository`. O domínio não importa Express nem SQLite. Situação em 23/11/2026: P01 a P09 implementadas; `api/` e `pages/` (P10 e P11) ainda não existem.
 
 ## 7. Diagrama de sequência
 
-Fonte oficial: `Atividade 4/Diagramas Sequencias/UC-013.svg`.
+Fonte oficial: `Atividades/Atividade 4/Diagramas Sequencias/UC-013.svg`.
 
 ## 8. Diagrama de classes
 
-[`diagrama-classes-uc-013.md`](diagrama-classes-uc-013.md): domínio, camadas do back-end e componentes do front-end, com rastreabilidade para as linhas de vida do diagrama de sequência e para as tasks.
+[`diagrama-classes-uc-013.md`](diagrama-classes-uc-013.md): domínio, camadas do back-end, componentes do front-end, erros e banco de dados, com rastreabilidade para as linhas de vida do diagrama de sequência e para as tasks. Task D01 (CSC-33).

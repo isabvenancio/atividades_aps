@@ -27,8 +27,17 @@ O VazaApp é uma aplicação voltada à geração de sugestões de desculpas per
 
 A documentação do projeto está organizada nos seguintes arquivos:
 
-- [Regras de Negócio](Atividade%202/regras_de_negocio.pdf)
-- [Requisitos Funcionais e Não Funcionais](Atividade%202/requisitos.pdf)
-- [Documento Casos de Uso](Atividade%2026%20de%20Agosto/casos_de_uso.pdf)
-- [Diagrama Casos de Uso](Atividade%2026%20de%20Agosto/diagrama_casos_de_uso.svg)
-- [Diagrama de Sequencia](Atividade%204/Diagramas%20Sequencias/) -> pasta Diagramas Sequencia com arquivos em .svg
+- [Regras de Negócio](Atividades/Atividade%202/regras_de_negocio.pdf)
+- [Requisitos Funcionais e Não Funcionais](Atividades/Atividade%202/requisitos.pdf)
+- [Documento Casos de Uso](Atividades/Atividade%2026%20de%20Agosto/casos_de_uso.pdf)
+- [Diagrama Casos de Uso](Atividades/Atividade%2026%20de%20Agosto/diagrama_casos_de_uso.svg)
+- [Diagrama de Sequencia](Atividades/Atividade%204/Diagramas%20Sequencias/) -> pasta Diagramas Sequencia com arquivos em .svg
+
+## Trabalho final — UC-013 Criar pedido de desculpa
+
+O caso de uso implementado fica em [`Trabalho Final/`](Trabalho%20Final/), com back-end (Node.js, Express e SQLite) e front-end (React com Vite).
+
+- [Especificação e contrato da API](Trabalho%20Final/docs/uc-013-especificacao.md)
+- [Diagrama de classes](Trabalho%20Final/docs/diagrama-classes-uc-013.md)
+- [Plano de trabalho, tasks e acompanhamento](Trabalho%20Final/docs/plano-uc-013.md)
+- [Como rodar o back-end](Trabalho%20Final/backend/README.md) e [o front-end](Trabalho%20Final/frontend/README.md)
