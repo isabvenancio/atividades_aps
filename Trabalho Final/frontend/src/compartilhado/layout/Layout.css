@@ -1,0 +1,87 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.layout__faixa {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  width: 100%;
+  max-width: var(--largura-conteudo);
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.layout__pular {
+  position: absolute;
+  top: -3rem;
+  left: 1rem;
+  z-index: 10;
+  padding: 0.5rem 1rem;
+  border-radius: calc(var(--raio) / 1.5);
+  background: var(--cor-primaria);
+  color: #ffffff;
+}
+
+.layout__pular:focus {
+  top: 1rem;
+}
+
+.layout__cabecalho {
+  border-bottom: 1px solid var(--cor-borda);
+  background: var(--cor-superficie);
+}
+
+.layout__marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.layout__logo {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.6rem;
+  background: var(--cor-primaria);
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+.layout__lema {
+  color: var(--cor-texto-suave);
+  font-size: 0.95rem;
+}
+
+.layout__conteudo {
+  flex: 1;
+  width: 100%;
+  max-width: var(--largura-conteudo);
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+.layout__conteudo:focus {
+  outline: none;
+}
+
+.layout__rodape {
+  border-top: 1px solid var(--cor-borda);
+  background: var(--cor-superficie);
+  color: var(--cor-texto-suave);
+  font-size: 0.875rem;
+}
+
+.layout__faixa--rodape {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
