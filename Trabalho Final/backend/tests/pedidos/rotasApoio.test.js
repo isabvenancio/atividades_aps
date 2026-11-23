@@ -12,7 +12,10 @@ beforeEach(() => {
   app = criarApp({ banco });
 });
 
-afterEach(() => banco.close());
+afterEach(() => {
+  jest.restoreAllMocks();
+  banco.close();
+});
 
 test('GET /api/categorias devolve apenas as categorias ativas no formato do formulário', async () => {
   const resposta = await request(app).get('/api/categorias').set('Authorization', 'Bearer dev:conta-dev');
@@ -39,6 +42,20 @@ test('GET /api/destinatarios usa a conta da sessão mesmo com outra conta na con
   expect(segunda.status).toBe(200);
   expect(segunda.body).toEqual([{ id: 'dest-caio', nome: 'Caio', tipo: 'amigo', proximidade: 'alta' }]);
 });
+
+test.each(['/api/categorias', '/api/destinatarios'])(
+  'GET %s responde 500 FALHA_AO_CONSULTAR e registra o erro quando a consulta falha (B01)',
+  async (rota) => {
+    const registro = jest.spyOn(console, 'error').mockImplementation(() => {});
+    banco.close();
+    const resposta = await request(app).get(rota).set('Authorization', 'Bearer dev:conta-dev');
+    expect(resposta.status).toBe(500);
+    expect(resposta.body).toEqual({
+      erro: 'FALHA_AO_CONSULTAR', mensagem: 'Não foi possível carregar os dados. Tente novamente.',
+    });
+    expect(registro).toHaveBeenCalledWith(`[GET ${rota}] Erro não tratado:`, expect.objectContaining({ message: expect.any(String) }));
+  },
+);
 
 test('uma conta sem destinatários recebe uma lista vazia', async () => {
   const resposta = await request(app).get('/api/destinatarios').set('Authorization', 'Bearer dev:conta-nova');
