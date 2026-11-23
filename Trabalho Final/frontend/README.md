@@ -20,11 +20,18 @@ npm run build    # build de produção em dist/
 ```
 frontend/src/
 ├── main.jsx
-├── App.jsx
+├── App.jsx               # Layout + página atual
 ├── setupTests.js
+├── estilos/
+│   └── tema.css          # cores, tipografia e estilos base (variáveis CSS)
+├── compartilhado/
+│   └── layout/           # cabeçalho, conteúdo principal e rodapé
 └── features/
+    ├── inicio/           # página inicial (D02)
     └── criar-pedido/     # UC-013 (P07 a P11)
 ```
+
+As cores e medidas ficam em variáveis no `tema.css` (por exemplo, `var(--cor-primaria)` e `var(--raio)`). Use essas variáveis nos componentes novos em vez de valores fixos.
 
 ## Dependências que entram nas tasks
 
