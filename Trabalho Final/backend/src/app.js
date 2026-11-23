@@ -20,7 +20,7 @@ function criarApp({ banco = abrirBanco() } = {}) {
     categoriaRepository,
     destinatarioRepository,
   });
-  const controller = new PedidoController({ pedidoService });
+  const controller = new PedidoController({ pedidoService, categoriaRepository, destinatarioRepository });
 
   app.get('/api/saude', (req, res) => {
     res.json({ status: 'ok' });
@@ -29,6 +29,8 @@ function criarApp({ banco = abrirBanco() } = {}) {
   app.post('/api/pedidos', autenticar, express.json(), (req, res, next) => {
     controller.criar(req, res).catch(next);
   });
+  app.get('/api/categorias', autenticar, (req, res) => controller.listarCategorias(req, res));
+  app.get('/api/destinatarios', autenticar, (req, res) => controller.listarDestinatarios(req, res));
   app.use(tratarErro);
 
   return app;

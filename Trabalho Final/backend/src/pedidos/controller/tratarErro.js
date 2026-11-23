@@ -23,6 +23,12 @@ function tratarErro(erro, req, res, next) {
       campos: erro.campos,
     });
   }
+  if (req.method === 'GET') {
+    return res.status(500).json({
+      erro: 'FALHA_AO_CONSULTAR',
+      mensagem: 'Não foi possível carregar os dados. Tente novamente.',
+    });
+  }
   return res.status(500).json({
     erro: 'FALHA_AO_SALVAR',
     mensagem: 'Não foi possível salvar o pedido. Tente novamente.',
