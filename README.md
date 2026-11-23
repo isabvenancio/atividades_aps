@@ -27,8 +27,8 @@ O VazaApp é uma aplicação voltada à geração de sugestões de desculpas per
 
 A documentação do projeto está organizada nos seguintes arquivos:
 
-- [Regras de Negócio](Atividade%202/regras_de_negocio.pdf)
-- [Requisitos Funcionais e Não Funcionais](Atividade%202/requisitos.pdf)
-- [Documento Casos de Uso](Atividade%2026%20de%20Agosto/casos_de_uso.pdf)
-- [Diagrama Casos de Uso](Atividade%2026%20de%20Agosto/diagrama_casos_de_uso.svg)
-- [Diagrama de Sequencia](Atividade%204/Diagramas%20Sequencias/) -> pasta Diagramas Sequencia com arquivos em .svg
+- [Regras de Negócio](Atividades/Atividade%202/regras_de_negocio.pdf)
+- [Requisitos Funcionais e Não Funcionais](Atividades/Atividade%202/requisitos.pdf)
+- [Documento Casos de Uso](Atividades/Atividade%2026%20de%20Agosto/casos_de_uso.pdf)
+- [Diagrama Casos de Uso](Atividades/Atividade%2026%20de%20Agosto/diagrama_casos_de_uso.svg)
+- [Diagrama de Sequencia](Atividades/Atividade%204/Diagramas%20Sequencias/) -> pasta Diagramas Sequencia com arquivos em .svg

@@ -1,6 +1,6 @@
 # UC-013 — Criar pedido de desculpa (especificação para implementação)
 
-> Resumo operacional do UC-013 de `Atividade 26 de Agosto/casos_de_uso.pdf`, com rastreabilidade em RF-013, RN-003, RN-007 e RN-008. O documento original continua sendo a fonte oficial. Este arquivo existe para o front e o back trabalharem em paralelo sobre o mesmo contrato.
+> Resumo operacional do UC-013 de `Atividades/Atividade 26 de Agosto/casos_de_uso.pdf`, com rastreabilidade em RF-013, RN-003, RN-007 e RN-008. O documento original continua sendo a fonte oficial. Este arquivo existe para o front e o back trabalharem em paralelo sobre o mesmo contrato.
 
 ## 1. Resumo
 
@@ -181,7 +181,7 @@ Dependências: `controller → service → domain` e `service → repository`. O
 
 ## 7. Diagrama de sequência
 
-Fonte oficial: `Atividade 4/Diagramas Sequencias/UC-013.svg`.
+Fonte oficial: `Atividades/Atividade 4/Diagramas Sequencias/UC-013.svg`.
 
 ## 8. Diagrama de classes
 

@@ -1,6 +1,6 @@
 # UC-013 — Criar pedido de desculpa: diagrama de classes
 
-Este documento mostra a **estrutura estática** do UC-013: as classes, seus atributos e operações, a visibilidade e os relacionamentos com multiplicidade. O comportamento está no diagrama de sequência (`Atividade 4/Diagramas Sequencias/UC-013.svg`), e as regras e o contrato da API estão em [`uc-013-especificacao.md`](uc-013-especificacao.md).
+Este documento mostra a **estrutura estática** do UC-013: as classes, seus atributos e operações, a visibilidade e os relacionamentos com multiplicidade. O comportamento está no diagrama de sequência (`Atividades/Atividade 4/Diagramas Sequencias/UC-013.svg`), e as regras e o contrato da API estão em [`uc-013-especificacao.md`](uc-013-especificacao.md).
 
 São dois tipos de diagrama, com propósitos diferentes:
 
