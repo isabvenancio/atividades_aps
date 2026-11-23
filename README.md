@@ -37,7 +37,9 @@ A documentação do projeto está organizada nos seguintes arquivos:
 
 O caso de uso implementado fica em [`Trabalho Final/`](Trabalho%20Final/), com back-end (Node.js, Express e SQLite) e front-end (React com Vite).
 
+- [Visão geral e como rodar](Trabalho%20Final/README.md)
 - [Especificação e contrato da API](Trabalho%20Final/docs/uc-013-especificacao.md)
 - [Diagrama de classes](Trabalho%20Final/docs/diagrama-classes-uc-013.md)
+- [Rastreabilidade (casos de teste, tasks e PRs)](Trabalho%20Final/docs/rastreabilidade-uc-013.md)
 - [Plano de trabalho, tasks e acompanhamento](Trabalho%20Final/docs/plano-uc-013.md)
 - [Como rodar o back-end](Trabalho%20Final/backend/README.md) e [o front-end](Trabalho%20Final/frontend/README.md)
