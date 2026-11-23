@@ -58,7 +58,7 @@ Uma task só está pronta quando:
 
 | Integrante | Foco no UC-013 | Tasks |
 |---|---|---|
-| **Isabella Barela Venancio** | Estrutura do repositório; back: domínio e serviço; documentação final | T00, P01, P02, P03, P13 |
+| **Isabella Barela Venancio** | Estrutura do repositório; back: domínio e serviço; diagrama de classes; documentação final | T00, P01, P02, P03, D01, P13 |
 | **Carolina Yumi Toyota** | Back: persistência, autenticação provisória e endpoints | P04, P05, P06 |
 | **Matheus Lara Campos** | Front: formulário, validação e testes | P07, P08, P09 |
 | **Gabriela Borborema Paes Barreto** | Front: integração e página; testes da API | P10, P11, P12 |
@@ -135,6 +135,13 @@ Dependência = "só faz merge depois de". Revisor = quem aprova o PR.
 - Documentar os endpoints no `backend/README.md` com exemplos.
 - **Pronto quando:** todos os cenários passam.
 
+### Modelagem
+
+**D01 — Diagrama de classes do UC-013** · Isabella · sem branch própria (commits direto na `feature/uc-013-criar-pedido-desculpa`) · CSC-33 · depende de P01 e P02; atualizado depois de P04 a P09
+- [`diagrama-classes-uc-013.md`](diagrama-classes-uc-013.md): diagrama de domínio e diagrama de projeto em camadas (back-end, front-end, erros e banco de dados), com responsabilidades, regras de dependência e rastreabilidade até os diretórios.
+- Segue a aula de Diagrama de Classes e a lista da Atividade 6. Pedido pelo professor em "Para concluir".
+- **Pronto quando:** o documento reflete o código integrado e os diagramas renderizam no GitHub. Atualizar de novo na P13, depois da P10 e da P11.
+
 ### Fechamento
 
 **P13 — Documentação, evidências e PR final** · Isabella · `isabella/P13-documentacao-final` · CSC-5 · depende de todas · revisor: Matheus
@@ -150,13 +157,13 @@ O board do Jira não tem sprints; elas são marcadas com as labels `sprint-1` e 
 Sprint 1 — Base                        Sprint 2 — Integração e testes
   T00 ► P01 ► P02                        P03 · P05 · P08 ► P09
   T00 ► P04 ► P06                        P11 · P12 · P13
-  T00 ► P07 · P10
+  T00 ► P07 · P10                        D01
 ```
 
 | Sprint | Meta (Sprint Goal) | Tasks |
 |---|---|---|
 | 1 | O repositório tem a estrutura e o CI; o back sabe validar um pedido e ler categorias e destinatários; o front tem o formulário e o cliente da API | T00, P01, P02, P04, P06, P07, P10 |
-| 2 | O usuário salva um rascunho de ponta a ponta, com destinatário cadastrado ou direto, sem acessar dados de outra conta | P03, P05, P08, P09, P11, P12, P13 |
+| 2 | O usuário salva um rascunho de ponta a ponta, com destinatário cadastrado ou direto, sem acessar dados de outra conta | P03, P05, P08, P09, P11, P12, D01, P13 |
 
 ## 6. Jira
 
@@ -168,6 +175,7 @@ Epic     CSC-2  UC-013 Criar pedido de desculpa
 │   └── Sub-tasks: P01 (CSC-21), P02 (CSC-22), P05 (CSC-23), P07 (CSC-24), P08 (CSC-25), P11 (CSC-26)
 ├── Story  CSC-9  História 2 — Associar o destinatário ao pedido
 │   └── Sub-tasks: P03 (CSC-27), P04 (CSC-28), P06 (CSC-29), P09 (CSC-30), P10 (CSC-31), P12 (CSC-32)
+├── Task   CSC-33 D01 Diagrama de classes do UC-013
 └── Task   CSC-5  P13 Documentação, evidências e PR final
 Task       CSC-3  T00 Estruturar o repositório (pré-requisito)
 ```
@@ -194,4 +202,5 @@ Colunas: **A fazer → Fazendo → Em análise → Feito**.
 | P10 | Gabriela | `gabriela/P10-cliente-api-hook` | CSC-31 | Matheus | | |
 | P11 | Gabriela | `gabriela/P11-pagina-criar-pedido` | CSC-26 | Matheus | | |
 | P12 | Gabriela | `gabriela/P12-testes-integracao-api` | CSC-32 | Carolina | | |
+| D01 | Isabella | — (direto na `feature/uc-013-criar-pedido-desculpa`) | CSC-33 | — | — | Feito |
 | P13 | Isabella | `isabella/P13-documentacao-final` | CSC-5 | Matheus | | |
