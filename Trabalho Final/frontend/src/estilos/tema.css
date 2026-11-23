@@ -1,0 +1,111 @@
+/* Tema do VazaApp: cores, tipografia e estilos base usados em todas as telas. */
+
+:root {
+  --cor-fundo: #f6f4fb;
+  --cor-superficie: #ffffff;
+  --cor-texto: #1f1c2e;
+  --cor-texto-suave: #57536b;
+  --cor-borda: #e2deef;
+  --cor-primaria: #5b3cc4;
+  --cor-primaria-escura: #462ea0;
+  --cor-primaria-suave: #ede8fc;
+  --cor-destaque: #e8590c;
+  --cor-sucesso: #12715b;
+  --cor-sucesso-suave: #e3f4ee;
+  --cor-erro: #b42318;
+
+  --fonte: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --raio: 0.75rem;
+  --sombra: 0 1px 2px rgb(31 28 46 / 0.06), 0 4px 16px rgb(31 28 46 / 0.06);
+  --largura-conteudo: 60rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: var(--fonte);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--cor-primaria);
+}
+
+:focus-visible {
+  outline: 3px solid var(--cor-destaque);
+  outline-offset: 2px;
+}
+
+/* Controles de formulário: valem para o formulário do pedido quando ele entrar na tela (P11). */
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+input,
+textarea,
+select {
+  border: 1px solid var(--cor-borda);
+  border-radius: calc(var(--raio) / 1.5);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+}
+
+input[aria-invalid='true'],
+textarea[aria-invalid='true'],
+select[aria-invalid='true'] {
+  border-color: var(--cor-erro);
+}
+
+[role='alert'] {
+  color: var(--cor-erro);
+}
+
+button {
+  border: 1px solid var(--cor-primaria);
+  border-radius: calc(var(--raio) / 1.5);
+  background: var(--cor-primaria);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: var(--cor-primaria-escura);
+}
+
+button[type='button'] {
+  background: var(--cor-superficie);
+  color: var(--cor-primaria);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
