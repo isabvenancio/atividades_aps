@@ -46,26 +46,33 @@
 | CA-013.2 | Destinatário direto permite criar pedido sem cadastro reutilizável | CT-013.2 | Título, situação, categoria ativa e destinatário direto `Rita / superior / baixa` | Rascunho salvo com esses dados; **nenhum** destinatário novo na coleção |
 | CA-013.3 | Escolher destinatário guarda a fotografia do momento | CT-013.3 | Criar rascunho com `Rita / colega / média`; depois alterar o cadastro para `amigo / alta` | O pedido continua `colega / média` |
 
-Cenários adicionais propostos pelo grupo (cobrem E1 e RN-003):
+Cenários adicionais propostos pelo grupo e implementados (cobrem E1 e RN-003):
 
 | CT | Cenário | Esperado |
 |---|---|---|
-| CT-013.4 (proposto) | Criar pedido sem sessão ou com token inválido | 401; nenhum pedido criado |
-| CT-013.5 (proposto) | Escolher `destinatarioId` que pertence a **outra** conta | 404 genérico; nenhum pedido criado; nenhum dado do outro usuário na resposta |
+| CT-013.4 | Criar pedido sem sessão ou com token inválido | 401; nenhum pedido criado |
+| CT-013.5 | Escolher `destinatarioId` que pertence a **outra** conta | 404 genérico; nenhum pedido criado; nenhum dado do outro usuário na resposta |
 
-## 4. Decisões propostas (confirmar com o grupo)
+Os testes automatizados de cada cenário estão em [`rastreabilidade-uc-013.md`](rastreabilidade-uc-013.md).
 
-- **Título:** obrigatório, após `trim()` entre 1 e 100 caracteres.
-- **Situação e contexto:** opcionais, até 500 caracteres cada.
-- **Categoria:** opcional no rascunho, mas, se informada, precisa existir **e estar ativa** (CT-013.2 pede categoria ativa).
-- **Destinatário:** envie `destinatarioId` **ou** `destinatario`, nunca os dois (400). `tipo` ∈ `familiar | amigo | colega | superior | outro`; `proximidade` ∈ `baixa | media | alta` (a interface mostra "média"). Nome obrigatório.
-- **Fotografia:** o pedido grava `destinatario_nome`, `destinatario_tipo`, `destinatario_proximidade` e `destinatario_origem` (`cadastrado` ou `direto`). Alterar o cadastro depois **não** muda o pedido.
-- **Estado:** o servidor define `rascunho`. O cliente não envia estado nem dono do pedido; o dono vem da sessão.
-- **"Pronto para gerar"** (RN-008) exige situação, categoria ativa e destinatário com tipo e proximidade válidos. A resposta traz `dadosFaltantesParaGerar` com os que faltam.
-- **Sessão provisória:** o login (UC-002) ainda não existe. Usamos um middleware `autenticar` com `Authorization: Bearer dev:<contaId>`, ativo **só fora de produção**. Quando o UC-002 existir, só a implementação do middleware muda. O resto do código usa `req.contaId`.
-- **Categorias e destinatários** ainda não têm cadastro (UC-009 e UC-027). Esta entrega usa dados de teste (`npm run seed`) e endpoints **somente de leitura**.
+## 4. Decisões adotadas
 
-Registrar a decisão final aqui no PR da P13.
+As decisões abaixo foram propostas no início do trabalho e implementadas como estão. A coluna "Onde" aponta o código que as garante.
+
+| Decisão | Onde |
+|---|---|
+| **Título:** obrigatório, após `trim()` entre 1 e 100 caracteres. | `PedidoPolicy.validar` (`LIMITE_TITULO`); no front, `validarRascunho` e `maxLength` |
+| **Situação e contexto:** opcionais, até 500 caracteres cada. | `PedidoPolicy.validar` (`LIMITE_TEXTO`) |
+| **Categoria:** opcional no rascunho, mas, se informada, precisa existir **e estar ativa** (CT-013.2 pede categoria ativa). | `PedidoService` com `CategoriaRepository.buscarAtivaPorId` |
+| **Destinatário:** envie `destinatarioId` **ou** `destinatario`, nunca os dois (400). `tipo` ∈ `familiar \| amigo \| colega \| superior \| outro`; `proximidade` ∈ `baixa \| media \| alta` (a interface mostra "média"). Nome obrigatório, até 100 caracteres. | `PedidoPolicy.validar`; no front, `SeletorDestinatario` e `lerRascunho` |
+| **Fotografia:** o pedido grava `destinatario_nome`, `destinatario_tipo`, `destinatario_proximidade` e `destinatario_origem` (`cadastrado` ou `direto`). Alterar o cadastro depois **não** muda o pedido. | `Pedido`, `PedidoService` e tabela `pedidos` |
+| **Estado:** o servidor define `rascunho`. O cliente não envia estado nem dono do pedido; o dono vem da sessão. | `Pedido.novoRascunho` e `autenticar` |
+| **"Pronto para gerar"** (RN-008) exige situação, categoria ativa e destinatário com tipo e proximidade válidos. A resposta traz `dadosFaltantesParaGerar` com os que faltam. | `Pedido.dadosFaltantesParaGerar` |
+| **Sessão provisória:** o login (UC-002) ainda não existe. O middleware `autenticar` aceita `Authorization: Bearer dev:<contaId>` **só fora de produção** (`NODE_ENV` igual a `development` ou `test`; sem `NODE_ENV` definido, vale `development`). Quando o UC-002 existir, só a implementação do middleware muda. O resto do código usa `req.contaId`. | `compartilhado/auth/autenticar.js` |
+| **Categorias e destinatários** ainda não têm cadastro (UC-009 e UC-027). Esta entrega usa dados de teste (`npm run seed`) e endpoints **somente de leitura**. | `seed.js`, `GET /api/categorias`, `GET /api/destinatarios` |
+| **Erros inesperados** respondem 500 sem detalhes internos e ficam registrados no console do servidor (B01). | `tratarErro` |
+
+Atenção para a implantação: como a sessão de desenvolvimento vale quando `NODE_ENV` não está definido, um servidor publicado precisa rodar com `NODE_ENV=production`.
 
 ## 5. Contrato da API
 

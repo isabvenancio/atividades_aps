@@ -58,7 +58,7 @@ Uma task só está pronta quando:
 
 | Integrante | Foco no UC-013 | Tasks |
 |---|---|---|
-| **Isabella Barela Venancio** | Estrutura do repositório; back: domínio e serviço; diagrama de classes; layout do front; documentação final | T00, P01, P02, P03, D01, D02, P13 |
+| **Isabella Barela Venancio** | Estrutura do repositório; back: domínio e serviço; diagrama de classes; layout do front; correções; documentação final | T00, P01, P02, P03, D01, D02, B01, B02, P13 |
 | **Carolina Yumi Toyota** | Back: persistência, autenticação provisória e endpoints | P04, P05, P06 |
 | **Matheus Lara Campos** | Front: formulário, validação e testes | P07, P08, P09 |
 | **Gabriela Borborema Paes Barreto** | Front: integração e página; testes da API | P10, P11, P12 |
@@ -149,6 +149,14 @@ Dependência = "só faz merge depois de". Revisor = quem aprova o PR.
 - Fora do escopo: ligar o formulário à API e a rota `/pedidos/novo` (P10 e P11). A P11 coloca a página dela dentro do `Layout` e atualiza a lista de andamento.
 - **Pronto quando:** a página inicial aparece com o layout no celular e no computador, e `npm test`, `npm run lint` e `npm run build` passam no front.
 
+**B01 — Resposta 500 não registra o erro no servidor (bug)** · Isabella · `isabella/B01-log-erro-500` · CSC-35 · encontrado na revisão da P05 e da P06 · revisor: Carolina
+- O `tratarErro` registra o erro, com o método e a rota, antes de responder 500. Testes do registro e do 500 `FALHA_AO_CONSULTAR` das rotas GET.
+- **Pronto quando:** toda resposta 500 deixa o erro no console do servidor, e as respostas 400, 401 e 404 não registram nada.
+
+**B02 — Erro do servidor continua no campo depois de corrigido (bug)** · Isabella · `isabella/B02-erros-servidor-formulario` · CSC-36 · encontrado na revisão da P08 e da P09 · revisor: Matheus
+- No `PedidoForm`, o erro vindo da API some quando o usuário corrige o campo, e trocar o modo do destinatário descarta os erros sobre o destinatário. Sem destinatários cadastrados, o modo "Escolher cadastrado" sugere "Informar direto".
+- **Pronto quando:** os erros do servidor e os da validação local se comportam do mesmo jeito, com testes, inclusive para um subcampo (`destinatario.tipo`).
+
 ### Fechamento
 
 **P13 — Documentação, evidências e PR final** · Isabella · `isabella/P13-documentacao-final` · CSC-5 · depende de todas · revisor: Matheus
@@ -164,13 +172,13 @@ O board do Jira não tem sprints; elas são marcadas com as labels `sprint-1` e 
 Sprint 1 — Base                        Sprint 2 — Integração e testes
   T00 ► P01 ► P02                        P03 · P05 · P08 ► P09
   T00 ► P04 ► P06                        P11 · P12 · P13
-  T00 ► P07 · P10                        D01 · D02
+  T00 ► P07 · P10                        D01 · D02 · B01 · B02
 ```
 
 | Sprint | Meta (Sprint Goal) | Tasks |
 |---|---|---|
 | 1 | O repositório tem a estrutura e o CI; o back sabe validar um pedido e ler categorias e destinatários; o front tem o formulário e o cliente da API | T00, P01, P02, P04, P06, P07, P10 |
-| 2 | O usuário salva um rascunho de ponta a ponta, com destinatário cadastrado ou direto, sem acessar dados de outra conta | P03, P05, P08, P09, P11, P12, D01, D02, P13 |
+| 2 | O usuário salva um rascunho de ponta a ponta, com destinatário cadastrado ou direto, sem acessar dados de outra conta | P03, P05, P08, P09, P11, P12, D01, D02, B01, B02, P13 |
 
 ## 6. Jira
 
@@ -184,6 +192,8 @@ Epic     CSC-2  UC-013 Criar pedido de desculpa
 │   └── Sub-tasks: P03 (CSC-27), P04 (CSC-28), P06 (CSC-29), P09 (CSC-30), P10 (CSC-31), P12 (CSC-32)
 ├── Task   CSC-33 D01 Diagrama de classes do UC-013
 ├── Task   CSC-34 D02 Layout base e página inicial do front
+├── Bug    CSC-35 B01 Resposta 500 não registra o erro no servidor
+├── Bug    CSC-36 B02 Erro do servidor continua no campo depois de corrigido
 └── Task   CSC-5  P13 Documentação, evidências e PR final
 Task       CSC-3  T00 Estruturar o repositório (pré-requisito)
 ```
@@ -211,8 +221,10 @@ Colunas: **A fazer → Fazendo → Em análise → Feito**.
 | P11 | Gabriela | `gabriela/P11-pagina-criar-pedido` | CSC-26 | Matheus | — | A fazer |
 | P12 | Gabriela | `gabriela/P12-testes-integracao-api` | CSC-32 | Carolina | — | A fazer |
 | D01 | Isabella | — (direto na `feature/uc-013-criar-pedido-desculpa`) | CSC-33 | — | — | Feito |
-| D02 | Isabella | `isabella/D02-layout-base` | CSC-34 | Gabriela | | Fazendo |
-| P13 | Isabella | `isabella/P13-documentacao-final` | CSC-5 | Matheus | — | A fazer |
+| D02 | Isabella | `isabella/D02-layout-base` | CSC-34 | Gabriela | [#17](https://github.com/isabvenancio/atividades_aps/pull/17) | Feito |
+| B01 | Isabella | `isabella/B01-log-erro-500` | CSC-35 | Carolina | | Em análise |
+| B02 | Isabella | `isabella/B02-erros-servidor-formulario` | CSC-36 | Matheus | | Em análise |
+| P13 | Isabella | `isabella/P13-documentacao-final` | CSC-5 | Matheus | | Fazendo |
 
 O status é o do Jira em 23/11/2026.
 
