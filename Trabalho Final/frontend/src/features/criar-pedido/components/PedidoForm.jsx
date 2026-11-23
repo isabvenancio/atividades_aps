@@ -15,7 +15,13 @@ export default function PedidoForm({
   const [modo, setModo] = useState('nenhum');
   const [errosLocais, setErrosLocais] = useState({});
   const [errosCancelados, setErrosCancelados] = useState(null);
-  const externos = erros === errosCancelados ? {} : errosPorCampo(erros);
+  // Campos que o usuário já corrigiu depois de receber estes erros do servidor (B02).
+  const [corrigidos, setCorrigidos] = useState({ erros: null, campos: [] });
+  const camposCorrigidos = corrigidos.erros === erros ? corrigidos.campos : [];
+  const externos = Object.fromEntries(
+    Object.entries(erros === errosCancelados ? {} : errosPorCampo(erros))
+      .filter(([campo]) => !camposCorrigidos.includes(campo)),
+  );
   const mensagens = { ...externos, ...errosLocais };
 
   function salvar(evento) {
@@ -36,13 +42,15 @@ export default function PedidoForm({
 
   function editar(evento) {
     const { name, value } = evento.target;
-    if (!Object.keys(errosLocais).length) return;
-    if (name === 'modoDestinatario') {
-      setErrosLocais(Object.fromEntries(Object.entries(errosLocais).filter(([campo]) => !campo.startsWith('destinatario'))));
-    } else if (errosLocais[name] && value.trim()) {
-      const restantes = { ...errosLocais };
-      delete restantes[name];
-      setErrosLocais(restantes);
+    const trocouModo = name === 'modoDestinatario';
+    const resolvido = (campo) => (trocouModo ? campo.startsWith('destinatario') : campo === name && value.trim() !== '');
+
+    if (Object.keys(errosLocais).some(resolvido)) {
+      setErrosLocais(Object.fromEntries(Object.entries(errosLocais).filter(([campo]) => !resolvido(campo))));
+    }
+    const externosResolvidos = Object.keys(externos).filter(resolvido);
+    if (externosResolvidos.length) {
+      setCorrigidos({ erros, campos: [...camposCorrigidos, ...externosResolvidos] });
     }
   }
 

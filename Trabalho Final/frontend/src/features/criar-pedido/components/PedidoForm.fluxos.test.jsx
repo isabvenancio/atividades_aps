@@ -120,7 +120,7 @@ test('A6: cancelar descarta os campos, o destinatário e os erros sem enviar', a
   await user.type(campo('Título'), 'Rascunho que vou descartar');
   await user.type(campo('Situação'), 'Fiquei de ligar.');
   await user.selectOptions(campo('Categoria'), 'Trabalho');
-  await user.type(campo('Contexto'), 'Combinamos ontem.');
+  // O Contexto fica sem edição: corrigir o campo já esconderia o erro do servidor (B02).
   await user.selectOptions(campo('Destinatário'), 'Informar direto');
   await user.type(campo('Nome'), 'Rita');
   await user.selectOptions(campo('Tipo'), 'Colega');
