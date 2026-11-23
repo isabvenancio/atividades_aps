@@ -189,18 +189,25 @@ Colunas: **A fazer → Fazendo → Em análise → Feito**.
 
 | Task | Responsável | Branch | Chave Jira | Revisor | PR | Status |
 |---|---|---|---|---|---|---|
-| T00 | Isabella | `isabella/T00-estrutura-repositorio` | CSC-3 | Matheus | | |
-| P01 | Isabella | `isabella/P01-dominio-pedido` | CSC-21 | Carolina | | |
-| P02 | Isabella | `isabella/P02-servico-criar-rascunho` | CSC-22 | Carolina | | |
-| P03 | Isabella | `isabella/P03-testes-servico` | CSC-27 | Matheus | | |
-| P04 | Carolina | `carolina/P04-repositorios-sqlite` | CSC-28 | Isabella | | |
-| P05 | Carolina | `carolina/P05-endpoint-pedidos` | CSC-23 | Isabella | | |
-| P06 | Carolina | `carolina/P06-endpoints-apoio` | CSC-29 | Gabriela | | |
-| P07 | Matheus | `matheus/P07-formulario-pedido` | CSC-24 | Gabriela | | |
-| P08 | Matheus | `matheus/P08-validacao-destinatario-cancelar` | CSC-25 | Gabriela | | |
-| P09 | Matheus | `matheus/P09-testes-formulario` | CSC-30 | Isabella | | |
-| P10 | Gabriela | `gabriela/P10-cliente-api-hook` | CSC-31 | Matheus | | |
-| P11 | Gabriela | `gabriela/P11-pagina-criar-pedido` | CSC-26 | Matheus | | |
-| P12 | Gabriela | `gabriela/P12-testes-integracao-api` | CSC-32 | Carolina | | |
+| T00 | Isabella | `isabella/T00-estrutura-repositorio` | CSC-3 | Matheus | [#5](https://github.com/isabvenancio/atividades_aps/pull/5) | Feito |
+| P01 | Isabella | `isabella/P01-dominio-pedido` | CSC-21 | Carolina | [#6](https://github.com/isabvenancio/atividades_aps/pull/6) | Feito |
+| P02 | Isabella | `isabella/P02-servico-criar-rascunho` | CSC-22 | Carolina | [#7](https://github.com/isabvenancio/atividades_aps/pull/7) | Feito |
+| P03 | Isabella | `isabella/P03-testes-servico` | CSC-27 | Matheus | [#8](https://github.com/isabvenancio/atividades_aps/pull/8) | Feito |
+| P04 | Carolina | `carolina/P04-repositorios-sqlite` | CSC-28 | Isabella | [#10](https://github.com/isabvenancio/atividades_aps/pull/10) | Feito |
+| P05 | Carolina | `carolina/P05-endpoint-pedidos` | CSC-23 | Isabella | [#11](https://github.com/isabvenancio/atividades_aps/pull/11) | Feito |
+| P06 | Carolina | `carolina/P06-endpoints-apoio` | CSC-29 | Gabriela | [#12](https://github.com/isabvenancio/atividades_aps/pull/12) | Feito |
+| P07 | Matheus | `matheus/P07-formulario-pedido` | CSC-24 | Gabriela | [#13](https://github.com/isabvenancio/atividades_aps/pull/13) | Feito |
+| P08 | Matheus | `matheus/P08-validacao-destinatario-cancelar` | CSC-25 | Gabriela | [#14](https://github.com/isabvenancio/atividades_aps/pull/14) | Feito |
+| P09 | Matheus | `matheus/P09-testes-formulario` | CSC-30 | Isabella | [#15](https://github.com/isabvenancio/atividades_aps/pull/15) | Feito |
+| P10 | Gabriela | `gabriela/P10-cliente-api-hook` | CSC-31 | Matheus | — | A fazer |
+| P11 | Gabriela | `gabriela/P11-pagina-criar-pedido` | CSC-26 | Matheus | — | A fazer |
+| P12 | Gabriela | `gabriela/P12-testes-integracao-api` | CSC-32 | Carolina | — | A fazer |
 | D01 | Isabella | — (direto na `feature/uc-013-criar-pedido-desculpa`) | CSC-33 | — | — | Feito |
-| P13 | Isabella | `isabella/P13-documentacao-final` | CSC-5 | Matheus | | |
+| P13 | Isabella | `isabella/P13-documentacao-final` | CSC-5 | Matheus | — | A fazer |
+
+O status é o do Jira em 23/11/2026.
+
+**Diferenças em relação à seção 1:**
+- Os PRs da T00 à P03 (#5 a #8) foram integrados direto na `main`, e não na branch de feature. A branch de feature foi atualizada com a `main` em seguida, por isso tem o mesmo conteúdo.
+- A branch de feature já foi levada para a `main` antes do PR final, nos PRs [#9](https://github.com/isabvenancio/atividades_aps/pull/9) (19/11, até o diagrama de classes) e [#16](https://github.com/isabvenancio/atividades_aps/pull/16) (23/11, até a P09).
+- Os PRs [#1](https://github.com/isabvenancio/atividades_aps/pull/1) e [#2](https://github.com/isabvenancio/atividades_aps/pull/2) (16/11) integraram a P01 na `main` antes do fluxo atual e foram desfeitos no [#3](https://github.com/isabvenancio/atividades_aps/pull/3) (17/11). Em seguida, o [#4](https://github.com/isabvenancio/atividades_aps/pull/4) levou para a `main` o plano, a especificação, o template de PR e o script de branches.
