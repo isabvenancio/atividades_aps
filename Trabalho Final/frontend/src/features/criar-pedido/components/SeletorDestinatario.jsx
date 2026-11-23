@@ -19,6 +19,11 @@ export default function SeletorDestinatario({ modo, onModoChange, destinatarios,
           {destinatarios.map(({ id, nome }) => <option key={id} value={id}>{nome}</option>)}
         </CampoPedido>
       )}
+      {modo === 'cadastrado' && destinatarios.length === 0 && (
+        <p className="pedido-form__dica">
+          Você ainda não tem destinatários cadastrados. Escolha &quot;Informar direto&quot; para preencher os dados agora.
+        </p>
+      )}
       {modo === 'direto' && (
         <fieldset className="pedido-form__destinatario">
           <legend>Dados do destinatário</legend>
