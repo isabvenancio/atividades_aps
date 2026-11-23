@@ -36,6 +36,8 @@ O backend usa SQLite com `better-sqlite3`. Por padrão, o arquivo fica em `backe
 
 `npm run seed` prepara duas categorias ativas, Trabalho e Família, e uma arquivada. A conta de desenvolvimento `conta-dev` tem a destinatária Rita (`dest-rita`). A segunda conta, `conta-outra`, tem Caio (`dest-caio`). A carga pode ser repetida e preserva os dados já gravados.
 
+Em desenvolvimento e nos testes, o cabeçalho `Authorization: Bearer dev:conta-dev` identifica a sessão. Em produção esse mecanismo fica desativado. O rascunho pertence à conta identificada pelo cabeçalho.
+
 ## Contrato da API
 
 UC-013: [`../docs/uc-013-especificacao.md`](../docs/uc-013-especificacao.md), seção 5.
